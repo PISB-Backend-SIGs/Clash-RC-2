@@ -1,0 +1,62 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.obox{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: antiquewhite;
+}
+.odiv{
+    padding: 1rem;
+    border: 2px solid black;
+    height: fit-content;
+    margin: 1rem;
+}
+
+
+
+.main-wrapper {
+    z-index: 10;
+    border-image-source: url(https://credenz.in/static/media/square_red.8d3e1c6d.png);
+    border-image-slice: 20;
+    border-image-width: 10;
+    border-image-outset: 1;
+    border-style: solid;
+    border-image-repeat: round;
+    transition: box-shadow .3s;
+    margin: 0;
+    position: relative;
+    padding: 2.5rem 2.5rem 2.7rem;
+
+}
+
+.main-heading {
+    color: var(--darkreader-text--light);
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.main-text {
+    margin-top: 5px;
+    text-align: center, justify;
+    white-space: break-spaces;
+    overflow-y: scroll;
+    display: block;
+}
+
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-size: var(--bs-body-font-size); */
+    line-height: var(--bs-body-line-height);
+    text-align: var(--bs-body-text-align);
+    background-color: var(--bs-body-bg);
+    -webkit-text-size-adjust: 100%;
+    /* color: rgb(222, 219, 215); */
+    text-align: center;
+
+}
