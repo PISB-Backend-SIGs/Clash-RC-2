@@ -7,7 +7,7 @@ class QuestionAdmin (admin.ModelAdmin):
 admin.site.register(Question,QuestionAdmin)
 
 class PlayerAdmin (admin.ModelAdmin):
-    list_display = ("user","p_id","p_score","p_is_started")
+    list_display = ("user","p_score","p_is_started")
 admin.site.register(Player,PlayerAdmin)
 
 class SubmissionAdmin (admin.ModelAdmin):

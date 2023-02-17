@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 from django.contrib.auth.decorators import login_required
+from .models import *
 
 
 @login_required(login_url='login')
@@ -30,8 +31,24 @@ def userLogin(request):
 
         user = authenticate(request, username = username, password = password)
 
+
+        
+
         if user is not None:
             login(request, user)
+            if not(Player.objects.filter(user=request.user).exists()):
+                print(request.user)
+                player=Player(user=request.user)
+                player.save()
+
+            # obj  = Player.objects.filter(user=request.user).exists()
+            # print(obj)  #false
+
+            # try:
+            #     obj  = Player.objects.filter(user=request.user).exists
+            #     # if obj is None:
+            #         obj.save()
+            
             
             return redirect("home")
         else:
@@ -56,8 +73,10 @@ def userRegister(request):
         else:
             if password == rep_password and  len(password)>8: 
                 if re.search('[A-Z]', password)!=None and re.search('[0-9]', password)!=None and re.search("^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", password)!=None:
-                    user = User.objects.create_user(username = username, email = email, password = password)
-                    user.save()
+                    user_registration = User.objects.create_user(username = username, email = email, password = password)
+                    user_registration.save()
+                    player = Player(user=user_registration)
+                    player.save()
                     messages.success(request, "User creation successful! Kindly proceed for login")
                     return redirect("login")
                 else:

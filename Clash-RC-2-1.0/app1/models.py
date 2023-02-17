@@ -42,7 +42,6 @@ class Testcases(models.Model):
 class Player(models.Model):
     # temp = models.TextField(default = "-1")
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    p_id = models.BigAutoField(primary_key=True,unique=True)
     p_score = models.IntegerField(default=0)
     p_is_started = models.BooleanField(default=False)
     p_start_time = models.DateTimeField(null=True,blank=True)
