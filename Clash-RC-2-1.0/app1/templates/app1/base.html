@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <link rel="stylesheet" type="text/css" href="{% static 'app1/css/questions.css' %}" >
+
+    {% comment %} exeption {% endcomment %}
+    <link rel="stylesheet" href="{% static 'app1/css/bootstrap.css' %}">   
+
     <title>{% block "title" %}{% endblock "title" %}</title>
 
 
@@ -19,5 +23,13 @@
 <body>
     {% block "codeblock" %}{% endblock "codeblock" %}
 
+
+
+
+    {% include "app1\ajax\ajax.html" %}
+
+    <script src="{% static 'app1/js/jquery.js' %}"></script>
+    <script src="{% static 'app1/js/popper.js' %}"></script>
+    <script src="{% static 'app1/js/bootstrap.js' %}"></script>
 </body>
 </html>

@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 from django.contrib.auth.decorators import login_required
+
 from .models import *
 
 
@@ -30,12 +31,11 @@ def userLogin(request):
         password = request.POST['password']
 
         user = authenticate(request, username = username, password = password)
-
-
         
-
         if user is not None:
             login(request, user)
+            if request.user.is_superuser:
+                return redirect("settingwale")
             if not(Player.objects.filter(user=request.user).exists()):
                 print(request.user)
                 player=Player(user=request.user)
@@ -98,3 +98,18 @@ def questions(request):
 def question(request,id):
     question = Question.objects.get(q_id=id)
     return render(request,"app1/question.html",{"question":question})
+
+
+
+
+
+
+@login_required(login_url='login')
+def settingwale(request):
+    context={}
+    players = Player.objects.all()
+    users = User.objects.all()
+    context["players"]=players
+    context["users"]=users
+    return render(request,"app1/settingwale.html",context)
+
