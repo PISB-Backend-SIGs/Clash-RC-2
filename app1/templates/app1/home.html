@@ -1,0 +1,28 @@
+{% extends 'app1/base.html' %}
+{% block "title" %}Home{% endblock "title" %}
+
+{% block "codeblock" %}
+<div>
+    {% for message in messages %}
+    <div>
+       {{message}}
+      </div>
+    {% endfor %}
+</div>
+<section>
+    <h1>{{user.username}}</h1> &nbsp; <a href="logout"><button>Logout</button></a>
+    <h1>information and rules of game</h1>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eligendi odio beatae, consectetur aliquam harum at vero natus, totam explicabo sint ratione eaque quibusdam saepe distinctio. Laboriosam eligendi exercitationem nostrum numquam.</p>
+</section>
+
+
+<form  method="POST">
+    {% csrf_token %}
+
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem odio dolores, molestias odit voluptate modi ut aliquam nemo itaque! Error dolorem expedita hic. Molestiae dicta rerum sunt dolore numquam fugiat.</p>
+    <input type="checkbox" name="checkbox" value="checked"><br>
+    <input type="submit" >
+
+</form> 
+
+{% endblock "codeblock" %}

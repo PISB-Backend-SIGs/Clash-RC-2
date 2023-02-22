@@ -1,0 +1,44 @@
+{% extends 'app1/base.html' %} {% block "codeblock" %}
+<div class="box">
+  <!-- <div class="main-wrapper" , style="text-align: center;">
+        <div class="main-heading">{{question.q_title}}</div>
+        <div class="main-text">
+            {{question.q_descrp}} 
+        </div>
+    </div> -->
+
+  <div class="questiontitle">
+    <h1>{{question.q_title}}</h1>
+    &nbsp;<span><span>Difficulty Level:</span>{{question.q_diff_level}}</span>
+  </div>
+  <div class="questiondes">
+    <p>{{question.q_descrp}}</p>
+  </div>
+
+  <div class="questionconst">
+    <p>{{question.q_const}}</p>
+  </div>
+  <div class="testcass">
+    <span> Que id:</span>{{question.q_id}}
+    <br />
+    <span>Test id:</span>{{question.t_id}}
+    <br />
+    <span> Testcases: </span>{{question.t_op}}
+  </div>
+  <div class="other1">
+    <span>Points</span>{{question.q_point}}
+    <span>Accuracy</span>{{question.q_aqrcy}}
+    <span>Submissions</span>{{question.q_subns}}
+  </div>
+  <div class="other2">
+    <span>Time limit</span>{{question.q_time_limit}}
+    <span>Memmory limit</span>{{question.q_memory_limit}}
+  </div>
+</div>
+<div class="testip">
+  <form action="" method="POST">
+    <textarea name="testip" id="testip" cols="30" rows="10"></textarea>
+    <button onclick="gettestop()">Get</button>
+  </form>
+</div>
+{% endblock "codeblock" %}

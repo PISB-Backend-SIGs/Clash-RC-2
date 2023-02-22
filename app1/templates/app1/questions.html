@@ -1,0 +1,26 @@
+{% extends 'app1/base.html' %}
+{% block "codeblock" %}
+<div class="obox">
+{% for question in questions %}
+    <div class="odiv">
+        <div>
+            <h1 style="display: inline;">{{question.q_id}} &nbsp;{{question.q_title}}</h1>
+        </div>
+        <div>
+            <span>Points &nbsp;</span>{{question.q_point}}
+        </div>
+        <div>
+        </div>
+        <div>
+            <span>Difficulty </span>{{question.q_diff_level}} <br>
+            <span>Submissions</span>{{question.q_subns}}
+        </div>
+        <div>
+            <span>Accuracy &nbsp;</span>{{question.q_aqrcy}}
+        </div>
+        <div>
+            <input type="button" value="Solve" onclick="location.href='/question/{{question.q_id}}'">
+        </div>
+    </div>
+{% endfor %}
+{% endblock "codeblock" %}
