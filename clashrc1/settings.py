@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from django.contrib.messages import constants as messages
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "countdowntimer_model",
     'app1',
 ]
 
@@ -48,13 +51,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-MIDDLEWARE_CLASSES = [
-    # ...
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
-    # ...
+    'django_auto_logout.middleware.auto_logout',
+
 ]
 
 ROOT_URLCONF = 'clashrc1.urls'
@@ -70,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_auto_logout.context_processors.auto_logout_client',
             ],
         },
     },
@@ -125,7 +125,6 @@ USE_TZ = True
 
 # STATIC_URL = 'static/'
 
-import os
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
@@ -136,8 +135,7 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#Manually added
-from django.contrib.messages import constants as messages
+# Manually added
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
@@ -147,7 +145,7 @@ MESSAGE_TAGS = {
 # APPEND_SLASH=False
 # issue solved as i give action to questions
 
-
-SESSION_EXPIRE_SECONDS = 5  # 1 hour
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-SESSION_TIMEOUT_REDIRECT = 'app1/question.html'
+AUTO_LOGOUT = {
+    'IDLE_TIME': 10,
+    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+}

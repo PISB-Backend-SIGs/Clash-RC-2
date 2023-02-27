@@ -37,8 +37,10 @@
 </div>
 <div class="testip">
   <form action="" method="POST">
+    {% csrf_token %}
     <textarea name="testip" id="testip" cols="30" rows="10"></textarea>
     <button onclick="gettestop()">Get</button>
   </form>
 </div>
+{{ redirect_to_login_immediately }}
 {% endblock "codeblock" %}

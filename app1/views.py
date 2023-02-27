@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.shortcuts import render, HttpResponse, redirect
 from .models import *
 from django.contrib.auth.models import User
@@ -9,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 from .models import *
+from django.shortcuts import get_object_or_404, render
+from django.utils.translation import gettext_lazy as _
 
 
 @login_required(login_url='login')
@@ -98,8 +101,14 @@ def questions(request):
 @login_required(login_url='login')
 def question(request, id):
     question = Question.objects.get(q_id=id)
+    # testcases = Testcases.objects.get(t_id=id)
     return render(request, "app1/question.html", {"question": question})
 
+
+@login_required(login_url='login')
+def testcases(request, id):
+    testcases = Testcases.objects.get(t_id=id)
+    return render(request, "app1/question.html", {"question": question})
 
 @login_required(login_url='login')
 def settingwale(request):
@@ -109,5 +118,38 @@ def settingwale(request):
     context["players"] = players
     context["users"] = users
     return render(request, "app1/settingwale.html", context)
+
+
+@login_required(login_url='login')
+def timer_view(request):
+    context = {
+        'duration': 60,  # duration of timer in seconds
+    }
+    return render(request, 'timer.html', context)
+
+
+# function updateTimer() {
+#     var now = new Date().getTime()
+#     var remaining = duration - Math.floor((now - startTime) / 1000)
+#     if (remaining < 0) {
+#         remaining = 0
+#     }
+#     document.getElementById('timer').innerHTML = remaining
+#     if (remaining > 0) {
+#         setTimeout(updateTimer, 1000)
+#     } else {
+#         // timer has ended, send update to server
+#         $.ajax({
+#             type: 'POST',
+#             url: '/timer/update/',
+#             data: {'time_up': true},
+#             success: function(data) {
+#                 console.log('Timer updated successfully')
+#             }
+#         })
+#     }
+# }
+
+
 
 

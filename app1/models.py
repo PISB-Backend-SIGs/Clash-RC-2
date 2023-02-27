@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.utils import timezone
-
+from countdowntimer_model.models import CountdownTimer
+from django.utils.translation import gettext_lazy as _ 
 
 # Create your models here.
 # question model
@@ -59,7 +60,6 @@ class Submission(models.Model):
     q_id = models.IntegerField(null=True)
     # q_num=models.ForeignKey(Question, on_delete=models.CASCADE)
     # player=models.CharField( max_length=50)
-
     s_code = models.TextField(null=True)
     s_pt = models.IntegerField(default=0)
     s_time = models.DateTimeField(default=timezone.now)
@@ -77,3 +77,15 @@ class Submission(models.Model):
 
     def __str__(self):
         return f"{self.player}"
+        
+#timer
+
+# class DoomsdayCountdownTimer(CountdownTimer):
+#     doomsday_timer = DoomsdayCountdownTimer.object.create(
+#     duration_in_minutes=123,
+#     state=DoomsdayCountdownTimer.STATE.RUNNING  
+#     )
+
+#     def __str__(self):
+#         return f"{self.doomsday_timer}"
+
