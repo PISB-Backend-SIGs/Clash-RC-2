@@ -1,0 +1,19 @@
+$(document).ready(function() {
+    // set the countdown time to 10 minutes
+    var countdown_time = 10 * 60;
+    
+    // start the countdown timer
+    var countdown = setInterval(function() {
+      countdown_time -= 1;
+      if (countdown_time <= 0) {
+        clearInterval(countdown);
+        // set the submit time and submit the form
+        $('#submit_time').val(new Date().toISOString());
+        $('form').submit();
+      }
+      // update the timer display
+      var minutes = Math.floor(countdown_time / 60);
+      var seconds = countdown_time % 60;
+      $('#timer').text(minutes + ':' + seconds.toString().padStart(2, '0'));
+    }, 1000);
+  });

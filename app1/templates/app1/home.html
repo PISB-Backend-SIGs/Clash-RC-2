@@ -1,0 +1,86 @@
+{% extends 'app1/base.html' %}
+{% block "title" %}Home{% endblock "title" %}
+
+{% block "codeblock" %}
+<div>
+    {% for message in messages %}
+    <div>
+        {{message}}
+    </div>
+    {% endfor %}
+</div>
+<section>
+    <h1>{{user.username}}</h1> &nbsp; <a href="logout"><button>Logout</button></a>
+    <h1>information and rules of game</h1>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eligendi odio beatae, consectetur aliquam harum at vero
+        natus, totam explicabo sint ratione eaque quibusdam saepe distinctio. Laboriosam eligendi exercitationem nostrum
+        numquam.</p>
+</section>
+
+
+<form method="POST">
+    {% csrf_token %}
+
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem odio dolores, molestias odit voluptate modi ut
+        aliquam nemo itaque! Error dolorem expedita hic. Molestiae dicta rerum sunt dolore numquam fugiat.</p>
+    <input type="checkbox" name="checkbox" value="checked"><br>
+    <input type="submit">
+
+</form>
+
+<body class="game_info" data-spy="scroll" data-target=".header">
+
+    <div class="col-md-6 col-sm-6 col-xs-12">
+       <div class="row">
+          <div class="full">
+             <div class="right-match-time">
+                <h2>Next Match</h2>
+                <ul id="countdown-1" class="countdown">
+                   <li><span id="days"></span>Day </li>
+                   <li><span id="hours"></span>Hours </li>
+                   <li><span id="minutes"></span>Minutes </li>
+                   <li><span id="seconds"></span>Seconds </li>
+                </ul>
+
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+{% endblock "codeblock" %}
+
+{% block script %}
+<!-- import jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- start the timer when the page loads -->
+<script>
+$(document).ready(function() {
+  // set the countdown time to 10 minutes
+  var countdown_time = 10 * 60;
+  
+  // start the countdown timer
+  var countdown = setInterval(function() {
+    countdown_time -= 1;
+    if (countdown_time <= 0) {
+      clearInterval(countdown);
+      // submit the form when the timer reaches 0
+      $('form').submit();
+    }
+    // update the timer display
+    var minutes = Math.floor(countdown_time / 60);
+    var seconds = countdown_time % 60;
+    $('#timer').text(minutes + ':' + seconds.toString().padStart(2, '0'));
+  }, 1000);
+});
+</script>
+
+<!-- display the timer -->
+<div id="timer">10:00</div>
+
+<!-- the form that will be submitted when the timer reaches 0 -->
+<form method="post" action="{% url 'submit_timer' %}">
+  {% csrf_token %}
+  <input type="hidden" name="submit_time" value="" id="submit_time">
+</form>
+{% endblock script %}
