@@ -7,15 +7,20 @@ class QuestionAdmin (admin.ModelAdmin):
 admin.site.register(Question,QuestionAdmin)
 
 class PlayerAdmin (admin.ModelAdmin):
-    list_display = ("user","p_score","p_is_started")
+    list_display = ("user","p_score","p_is_started","p_is_junior")
 admin.site.register(Player,PlayerAdmin)
 
 class SubmissionAdmin (admin.ModelAdmin):
-    list_display = ("player","q_id","q_stat")
+    list_display = ("team","q_id","q_status")
 admin.site.register(Submission,SubmissionAdmin)
 
 class TestcasesAdmin (admin.ModelAdmin):
     list_display = ("q_id","t_id")
 admin.site.register(Testcases,TestcasesAdmin)
+
+class TeamAdmin (admin.ModelAdmin):
+    list_display = ("id","user_names","team_score","team_attempted")
+    # list_display = ("team_id","user1","user2","team_score")
+admin.site.register(Team,TeamAdmin)
 
 

@@ -1,10 +1,13 @@
 {% extends 'app1/base.html' %}
 {% block "codeblock" %}
+
+<h1>{{player.username}}</h1>
+
 <div class="obox">
 {% for question in questions %}
     <div class="odiv">
         <div>
-            <h1 style="display: inline;">{{question.q_id}} &nbsp;{{question.q_title}}</h1>
+            <h1 style="display: inline;">{{question.q_title}}</h1>
         </div>
         <div>
             <span>Points &nbsp;</span>{{question.q_point}}

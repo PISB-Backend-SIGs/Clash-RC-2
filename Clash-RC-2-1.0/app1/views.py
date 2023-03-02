@@ -6,11 +6,11 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 from django.contrib.auth.decorators import login_required
-
+from .utils import *
 from .models import *
 
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def home(request):
     context={
         "user":request.user
@@ -26,16 +26,19 @@ def home(request):
     return render(request,"app1/home.html",context)
 
 def userLogin(request):
+    print("in login")
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        print(username)
+        print(password)
 
         user = authenticate(request, username = username, password = password)
         
         if user is not None:
             login(request, user)
-            if request.user.is_superuser:
-                return redirect("settingwale")
+            # if request.user.is_superuser:         #to direct login to admin pannel
+            #     return redirect("settingwale")
             if not(Player.objects.filter(user=request.user).exists()):
                 print(request.user)
                 player=Player(user=request.user)
@@ -91,17 +94,74 @@ def userRegister(request):
 @login_required(login_url='login')
 def questions(request):
     questions = Question.objects.all()
-
-    return render(request,"app1/questions.html",{"questions":questions})
+    user=User.objects.get(username=request.user)
+    return render(request,"app1/questions.html",{"questions":questions,"player":user})
 
 @login_required(login_url='login')
 def question(request,id):
+    context={}
     question = Question.objects.get(q_id=id)
-    return render(request,"app1/question.html",{"question":question})
+    print("question",question)
+    player = Player.objects.get(user=request.user)
+    team = Team.objects.get(user__username=request.user)
+    print("team ",team)
+    context["question"]=question
+    context["player"]=player
+    context["team"]=team
+    try:
+        submission = Submission.objects.filter(team=team,q_id=question,q_status="AC").last()
+        # print("subtry",submission[0].s_code)
+        # print("subtry",submission)
+        # print("subtry",submission[0].s_code)
+        context["user_code"]=submission.s_code
+    except:
+        try:
+            submission = Submission.objects.filter(team=team,q_id=question).last()
+            context["user_code"]=submission.s_code
+        except:
+            context["user_code"]=""
+        # print(submission)
+        # submission = Submission.objects.all()
+        # print("sub",submission)
+        # print("sub",submission[8].q_status)
+        # print(submission[0])
+        # print(submission[0].s_code)
+        # context["user_code"]=submission.s_code
 
+    return render(request,"app1/question.html",context)
 
+@login_required(login_url='login')
+def question_sub(request,id):
+    print("inside question_sub ")
+    context={}
+    question = Question.objects.get(q_id=id)
+    team = Team.objects.get(user__username=request.user)
+    if request.method=="POST":
+        print("question_sub inside post")
+        user_code = request.POST.get("user_code")
+        submission = Submission(team=team,q_id=question,s_code=user_code)
+        submission.save()
+        test_cases = Testcases.objects.filter(q_id=id)
+        context["user_code"]=user_code
+        context["test_cases"]=test_cases
+        return render(request,"app1/question.html",context)
 
+# @login_required(login_url='login')
+def leaderboard(request):
+    context={
+        "title":"Result"
+    }
+    # team1 =Team.objects.all().values()  #to check attributes
+    # print(team1)
+    team =Team.objects.all().order_by('-team_score')
+    # print(team)
+    user=User.objects.all()
+    # print(user.filter(team__id=3)[0].username)
+    dict=get_leaderboard(team,user)   #to get list of dictionary containing places of users 
+    # team2 =User.objects.filter()
 
+    context["teams"]=dict
+    return render(request,"app1/result.html",context)
 
 
 @login_required(login_url='login')

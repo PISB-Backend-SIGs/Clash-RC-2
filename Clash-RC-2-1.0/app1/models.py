@@ -26,8 +26,8 @@ class Question(models.Model):
 class Testcases(models.Model):
     q_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     t_id = models.IntegerField(null=True)
-    t_ip = models.TextField(null=True)
-    t_op = models.TextField(null=True) 
+    t_ip = models.FileField( upload_to=None, max_length=100,blank=True)
+    t_op = models.FileField( upload_to=None, max_length=100,blank=True) 
     def __str__(self):
         return f"{self.q_id}"
     
@@ -38,26 +38,39 @@ class Testcases(models.Model):
 #     class Meta:
 #         abstract = True   
 
+class Team(models.Model):
+    # team_id = models.IntegerField()
+    user = models.ManyToManyField(User)
+    team_score = models.IntegerField(default=0)
+    team_attempted = models.IntegerField(default=0)
+
+    def user_names(self):
+        return ",".join([str(p) for p in self.user.all()])
+    def __str__(self) -> str:
+        return f"{self.id}"
 
 class Player(models.Model):
     # temp = models.TextField(default = "-1")
     user = models.OneToOneField(User,on_delete=models.CASCADE)
+    # team_up_id = models.ForeignKey(Team, on_delete=models.CASCADE)
+    p_login_number= models.IntegerField(default=0)
     p_score = models.IntegerField(default=0)
     p_is_started = models.BooleanField(default=False)
     p_start_time = models.DateTimeField(null=True,blank=True)
-
+    p_is_junior = models.BooleanField(default=True)
+   
     def __str__(self):
         return f"{self.user}"
     
 
 
 class Submission(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    q_id = models.IntegerField(null=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    q_id = models.ForeignKey(Question,on_delete=models.CASCADE)
     # q_num=models.ForeignKey(Question, on_delete=models.CASCADE) 
     # player=models.CharField( max_length=50)
-
-    s_code = models.TextField(null=True)
+    player_testcases=models.TextField(blank=True,null=True)
+    s_code = models.TextField(null=True,blank=True)
     s_pt = models.IntegerField(default=0)
     s_time= models.DateTimeField(default = timezone.now)
     # s_time = models.TimeField(auto_now=False, auto_now_add=False)
@@ -70,8 +83,9 @@ class Submission(models.Model):
         ('RE','Runtime Error'),
         ('AC' ,'Accepted'),
     )
-    q_stat = models.CharField(max_length=5,choices=q_chices,null=True)
+    q_status = models.CharField(max_length=5,choices=q_chices,blank=True,null=True)
 
     def __str__(self):
-        return f"{self.player}"
+        return f"{self.team}"
     
+

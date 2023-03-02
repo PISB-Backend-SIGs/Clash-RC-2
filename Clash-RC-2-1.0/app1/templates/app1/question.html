@@ -29,9 +29,17 @@
     </div>
 </div>
 <div class="testip">
-    <form action="" method="POST">
-        <textarea name="testip" id="testip" cols="30" rows="10"></textarea>
-        <button onclick="gettestop()">Get</button>
+    <form action="/question_sub/{{question.q_id}}" method="POST">
+        {% csrf_token %}
+        <textarea name="user_code" id="testip" cols="30" rows="10">{{user_code}}</textarea>
+        <input type="Submit" value="Submit" >    
+    
+        {% comment %} <input type="Submit" value="Submit" onclick="location.href='/question_sub/{{question.q_id}}'">  {% endcomment %}
     </form>
+    <div class="testcases_block">
+        {% for test_case in test_cases %}
+        <div>{{test_case.t_id}} </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock "codeblock" %}
