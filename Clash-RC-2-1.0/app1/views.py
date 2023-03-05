@@ -8,9 +8,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .utils import *
 from .models import *
+from .decorators import (only_superuser)
 
-
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def home(request):
     context={
         "user":request.user
@@ -164,6 +164,9 @@ def leaderboard(request):
     return render(request,"app1/result.html",context)
 
 
+# from django.contrib.auth.decorators import user_passes_test
+# @user_passes_test(lambda u: u.is_superuser)
+@only_superuser
 @login_required(login_url='login')
 def settingwale(request):
     context={}
