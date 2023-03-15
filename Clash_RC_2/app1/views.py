@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse, redirect
+from django.http import JsonResponse
 from .models import *
 from django.contrib.auth.models import User
 import re
@@ -9,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from .utils import *
 from .models import *
 from .decorators import (only_superuser)
-from .runner_utils import *
+from .runner_utils import runCode
 
 @login_required(login_url='login')
 def home(request):
@@ -37,14 +38,28 @@ def userLogin(request):
         user = authenticate(request, username = username, password = password)
         
         if user is not None:
-            login(request, user)
+            try:
+                player = Player.objects.get(user=user)
+                if not(player.p_is_loged_in):
+                    login(request, user)
+                    player.p_is_loged_in = True
+                    player.save()
+                else:
+                    messages.error(request, "You are already login")
+                    return redirect("login")
+            except:
+                player=Player(user=user,p_is_loged_in=True)
+                player.save()
+                login(request, user)
+
             # if request.user.is_superuser:         #to direct login to admin pannel
             #     return redirect("settingwale")
-            make_dir(user)
-            if not(Player.objects.filter(user=request.user).exists()):
-                print(request.user)
-                player=Player(user=request.user)
-                player.save()
+            
+            # if not(Player.objects.filter(user=request.user).exists()):
+            #     print(request.user)
+            #     player=Player(user=request.user)
+            #     player.save()
+            
 
             # obj  = Player.objects.filter(user=request.user).exists()
             # print(obj)  #false
@@ -106,35 +121,34 @@ def question(request,id):
     context={}
     question = Question.objects.get(q_id=id)
     print("question",question)
-    player = Player.objects.get(user=request.user)
+    user = User.objects.get(username=request.user)
+    player = Player.objects.get(user=user)
     team = Team.objects.get(user__username=request.user)
     print("team ",team)
     context["question"]=question
     context["player"]=player
     context["team"]=team
+
     try:
-        submission = Submission.objects.filter(team=team,q_id=question,q_status="AC").last()
+        submission = Submission.objects.filter(player=user,q_id=question,q_status="AC").last()
         # print("subtry",submission[0].s_code)
         # print("subtry",submission)
         # print("subtry",submission[0].s_code)
         context["user_code"]=submission.s_code
-        context["user_testcases"]=question.q_sip
+
     except:
         try:
-            submission = Submission.objects.filter(team=team,q_id=question).last()
+            submission = Submission.objects.filter(player=user,q_id=question).last()
             context["user_code"]=submission.s_code
-            context["user_testcases"]=submission.player_testcases
         except:
             context["user_code"]=""
-            context["user_testcases"]=question.q_sip
-        # print(submission)
-        # submission = Submission.objects.all()
-        # print("sub",submission)
-        # print("sub",submission[8].q_status)
-        # print(submission[0])
-        # print(submission[0].s_code)
-        # context["user_code"]=submission.s_code
-
+    try:
+        if submission.s_language == "cpp":
+            context["code_lang_cpp"]="cpp"
+        if submission.s_language == "c":
+            context["code_lang_c"]="c"
+    except:
+        pass
     return render(request,"app1/question.html",context)
 
 @login_required(login_url='login')
@@ -143,24 +157,40 @@ def question_sub(request,id):
     context={}
     question = Question.objects.get(q_id=id)
     user = User.objects.get(username = request.user)
-    team = Team.objects.get(user__username=request.user)
+    team = Team.objects.get(user =user)
     if request.method=="POST":
         print("question_sub inside post")
         user_code = request.POST.get("user_code")
-        language = "py"
-        user_ip_testcases =request.POST.get("user_test_cases")
-        # print(user_ip_testcases)
-        submission = Submission(team=team,q_id=question,s_code=user_code,player_testcases=user_ip_testcases)
+        language = request.POST.get("code_lang")
+        btn_status = int(request.POST.get("btn_clicked"))
+        
+        print("users code :",user_code,"languageddddddd 0",language,"stat : ",type(btn_status))
+
+        if (btn_status==0):
+            print("run clciked")
+            user_test_ip = request.POST.get("testip")
+            status = runCode(id,user_code,language,btn_status,user_test_ip)
+
+            dict = {
+                "status":1,
+                "tc_count":status,
+                "testip":user_test_ip,
+                "testop":status[0],
+            }
+            return JsonResponse(dict)
+
+        submission = Submission(team=team,player=user,q_id=question,s_code=user_code,s_language=language)
         
 
-        status = make_code_file(language,user_code,user_ip_testcases,user)
-        if (status):
+        status = runCode(id,user_code,language,btn_status,"No")
+        if (status.count("AC")==len(status)):
             submission.q_status = "AC"
         else:
             submission.q_status = "WA"
         submission.save()
 
-        return redirect(f"/question/{id}")
+        # return redirect(f"/question/{id}")
+        return JsonResponse({"status":1,"tc_count":status})
 
 # @login_required(login_url='login')
 def leaderboard(request):
@@ -194,5 +224,9 @@ def settingwale(request):
 
 
 def test(request):
-    make_dir("prasad")
+    if (request.method == "POST"):
+        return JsonResponse({"status":1})
+    else:
+        return JsonResponse({"status":0})
+    # make_dir("prasad")
     return render(request,"app1\\test.html")

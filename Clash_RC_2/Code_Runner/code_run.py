@@ -14,7 +14,6 @@ def run_python():
         run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True,timeout=1)
     except subprocess.TimeoutExpired:
         print("enter in exept blockhhhhhhhhhhhhhhhhhhhkjhkhk")
-        
     print(run)
     # print(run.stdout)
     # print(run.stderr)
@@ -87,3 +86,5 @@ def run_c():
 
 
 
+
+run_python()

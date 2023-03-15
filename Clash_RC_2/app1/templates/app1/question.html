@@ -1,5 +1,9 @@
 {% extends 'app1/base.html' %}
+{% load static %}
 {% block "codeblock" %}
+
+
+
 <div class="box">
     <!-- <div class="main-wrapper" , style="text-align: center;">
         <div class="main-heading">{{question.q_title}}</div>
@@ -29,19 +33,34 @@
     </div>
 </div>
 <div class="testip">
-    <form action="/question_sub/{{question.q_id}}" method="POST">
+    <form action="" method="POST" id="code_form">
         {% csrf_token %}
-        <textarea name="user_code" id="testip" cols="30" rows="10">{{user_code}}</textarea>
-        <textarea name="user_test_cases" id="testip" cols="30" rows="5">{{user_testcases}}</textarea>
+        <div>
+            <h3>Language</h3>
+            <select name="language" id="code_lang">
+                <option value="python" selected>Python</option>
+                <option value="cpp" {% if code_lang_cpp %}selected{% endif %}>C++</option>
+                <option value="c" {% if code_lang_c %}selected{% endif %}>C</option>
+            </select>
+        </div>
+        <textarea name="user_code" id="user_code" cols="130" rows="20" placeholder="#Enter your code here">{{user_code}}</textarea>
+        <textarea name="test_ip" id="testip" cols="30" rows="5" placeholder="Input">{{question.q_sip}}</textarea>
+        <textarea name="test_op" id="testop" cols="30" rows="5" placeholder="Output">{{question.q_sop}}</textarea>
 
-        <input type="Submit" value="Submit" >    
+        <input type="button" value="Run" id="run_code">    
+        <input type="button" value="Submit" id="submit_code" >    
         
         {% comment %} <input type="Submit" value="Submit" onclick="location.href='/question_sub/{{question.q_id}}'">  {% endcomment %}
     </form>
-    <div class="testcases_block">
-        {% for test_case in test_cases %}
-        <div>{{test_case.t_id}} </div>
-        {% endfor %}
+    <div class="testcases_block alert alert-success text-center h1" style="display: none;" id="tc_div">
+        <span id="actual_pass"></span>/<span id="original_pass"></span>
     </div>
 </div>
+
+<script src="{% static 'app1/js/jquery.js' %}"></script>
+<script src="{% static 'app1/js/popper.js' %}"></script> 
+<script src="{% static 'app1/js/bootstrap.js' %}"></script>
+
+
+{% include 'app1/ajax/ajax.html' %}
 {% endblock "codeblock" %}

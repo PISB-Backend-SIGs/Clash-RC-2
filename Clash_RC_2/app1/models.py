@@ -26,9 +26,9 @@ class Question(models.Model):
 
 class Testcases(models.Model):
     q_id = models.ForeignKey(Question, on_delete=models.CASCADE)
-    t_id = models.IntegerField(null=True)
-    t_ip = models.FileField( upload_to=None, max_length=100,blank=True)
-    t_op = models.FileField( upload_to=None, max_length=100,blank=True) 
+    t_id = models.IntegerField(null=True)  #no need
+    t_ip = models.FileField( upload_to="Question_Data/Uploaded", max_length=100,blank=True)
+    t_op = models.FileField( upload_to="Question_Data/Uploaded", max_length=100,blank=True) 
     def __str__(self):
         return f"{self.q_id}"
     
@@ -57,6 +57,7 @@ class Player(models.Model):
     p_login_number= models.IntegerField(default=0)
     p_score = models.IntegerField(default=0)
     p_is_started = models.BooleanField(default=False)
+    p_is_loged_in = models.BooleanField(default=False)
     p_start_time = models.DateTimeField(null=True,blank=True)
     p_is_junior = models.BooleanField(default=True)
    
@@ -67,11 +68,13 @@ class Player(models.Model):
 
 class Submission(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
     q_id = models.ForeignKey(Question,on_delete=models.CASCADE)
     # user = models.ForeignKey(User, on_delete=models.CASCADE)
     # q_num=models.ForeignKey(Question, on_delete=models.CASCADE) 
     # player=models.CharField( max_length=50)
-    player_testcases=models.TextField(blank=True,null=True)
+    # player_testcases=models.TextField(blank=True,null=True)
+    s_language = models.CharField(blank=True, max_length=50)
     s_code = models.TextField(null=True,blank=True)
     s_pt = models.IntegerField(default=0)
     s_time= models.DateTimeField(default = timezone.now)

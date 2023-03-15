@@ -1,0 +1,102 @@
+<script>
+    $("#submit_code").on( "click" ,function () {
+        // console.log("Submit Clicked")
+        // console.log("{{request.user}}","{{question.q_id}}")
+        let user_code = $("#user_code").val();
+        // console.log(user_code)
+
+        let code_lang = $("#code_lang").val();
+        // console.log(code_lang)
+
+        let id ="{{question.q_id}}"
+        
+        $.ajax({
+            url : '/question_sub/'+id,
+            method : "POST",
+            headers: {
+                'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            data: {
+                "user_code":user_code,
+                "code_lang":code_lang,
+                "btn_clicked":1
+            },
+            success: function(response) {
+                // console.log(response)
+                let tc_div = document.getElementById("tc_div");
+                tc_div.style.display= "none";
+                tc_div.style.display= "block";
+                let actual_pass= 0;
+                let original_pass =response.tc_count.length;
+                
+                var sub_arr = response.tc_count;
+                let original_pass_id = document.getElementById("original_pass").innerText=original_pass;
+                
+                let count=0;
+                for (let i = 0; i < original_pass; i++) {
+                setTimeout(function() {
+                    if (sub_arr[i]==="AC"){
+                        count += 1;
+                        document.getElementById('actual_pass').innerHTML = count;
+                    }
+                    document.getElementById('actual_pass').innerHTML = count;
+                }, i * 1000);
+                }
+                
+            },
+            error: function(xhr, status, error) {
+                // handle error response
+            }
+        })
+
+        
+    })
+
+    // activaet onclick run
+    $("#run_code").on( "click" ,function () {
+        // console.log("Submit Clicked")
+        // console.log("{{request.user}}","{{question.q_id}}")
+        let user_code = $("#user_code").val();
+        // console.log(user_code)
+
+        let code_lang = $("#code_lang").val();
+        // console.log(code_lang)
+        
+        let testip = $("#testip").val();
+        // console.log(testip)
+
+        let id ="{{question.q_id}}"
+        $.ajax({
+            url : '/question_sub/'+id,
+            method : "POST",
+            headers: {
+                'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            data: {
+                "user_code":user_code,
+                "code_lang":code_lang,
+                "testip":testip,
+                "btn_clicked":0
+            },
+            success: function(response) {
+                console.log(response)
+                let tc_div = document.getElementById("tc_div");
+                tc_div.style.display= "none";
+                
+                let testip = document.getElementById("testip");
+                let testop = document.getElementById("testop");
+
+                testip.value= response.testip
+                testop.value= response.testop
+                
+                
+            },
+            error: function(xhr, status, error) {
+                // handle error response
+            }
+        })
+
+        
+    })
+    
+</script>
