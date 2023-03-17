@@ -3,26 +3,20 @@
 
 <h1>{{player.username}}</h1>
 
-<div class="obox">
+<div class="container d-flex flex-wrap justify-content-between">
 {% for question in questions %}
-    <div class="odiv">
-        <div>
-            <h1 style="display: inline;">{{question.q_title}}</h1>
+    
+    <div class="card text-center" style="width: 18rem;">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{question.q_aqrcy}}%" aria-valuenow="{{question.q_aqrcy}}" aria-valuemin="0" aria-valuemax="100">{{question.q_aqrcy}}%</div>
+          </div>
+        <div class="card-body">
+          {% comment %} <h6>{% if question.q_id|stringformat:"s" in ques_list %}Solved{% endif %} </h6> {% endcomment %}
+          <h5 class="card-title">{{question.q_title}}</h5>
+          <p class="card-text">Difficulty &nbsp;{{question.q_diff_level}}</p>
+          <input class="btn {% if question.q_id|stringformat:"s" in ques_list %}btn-success {% else %}btn-primary{% endif %}" type="button" value="Solve" onclick="location.href='/question/{{question.q_id}}'">
         </div>
-        <div>
-            <span>Points &nbsp;</span>{{question.q_point}}
-        </div>
-        <div>
-            <span>Difficulty</span>{{question.q_diff_level}} <br>
-            <span>Submissions</span>{{question.q_subns}}
-        </div>
-        <div>
-            <span>Accuracy &nbsp;</span>{{question.q_aqrcy}}
-        </div>
-        <div>
-            <input type="button" value="Solve" onclick="location.href='/question/{{question.q_id}}'">
-        </div>
-    </div>
+      </div>
 {% endfor %}
 </div>
 

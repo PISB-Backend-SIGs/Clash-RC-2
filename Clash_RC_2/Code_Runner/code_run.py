@@ -1,5 +1,5 @@
 import subprocess
-
+import time
 def run_python():
     code_path = "Code_Runner/code.py"
     tc_path = "Code_Runner/input.txt"
@@ -10,13 +10,18 @@ def run_python():
     rc=open('Code_Runner/status.txt','w+')
     out=open('Code_Runner/output.txt','w+')
     # run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True,timeout=1)
+    st =time.time()
     try:
         run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True,timeout=1)
     except subprocess.TimeoutExpired:
-        print("enter in exept blockhhhhhhhhhhhhhhhhhhhkjhkhk")
-    print(run)
+        print("enter in exept blockhhhhhhhhhhhhhhhhhhhkkhk")
+    et = time.time()
+    print("time foe execution  : ",et-st)
+    
+    # print(run)
     # print(run.stdout)
     # print(run.stderr)
+    # print(run.returncode)
     out.write(run.stdout)
     er.write(run.stderr)
     rc.write(str(run.returncode))
@@ -87,4 +92,4 @@ def run_c():
 
 
 
-run_python()
+run_cpp()

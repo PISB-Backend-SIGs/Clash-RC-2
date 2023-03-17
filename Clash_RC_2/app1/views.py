@@ -110,11 +110,11 @@ def userRegister(request):
 
 @login_required(login_url='login')
 def questions(request):
-    
-    
-    questions = Question.objects.all()
     user=User.objects.get(username=request.user)
-    return render(request,"app1/questions.html",{"questions":questions,"player":user})
+    questions = Question.objects.all()
+    check_accuracy()
+    ques_list=check_solved(user)
+    return render(request,"app1/questions.html",{"questions":questions,"player":user,"ques_list":ques_list})
 
 @login_required(login_url='login')
 def question(request,id):
@@ -164,7 +164,7 @@ def question_sub(request,id):
         language = request.POST.get("code_lang")
         btn_status = int(request.POST.get("btn_clicked"))
         
-        print("users code :",user_code,"languageddddddd 0",language,"stat : ",type(btn_status))
+        # print("users code :",user_code,"languageddddddd 0",language,"stat : ",type(btn_status))
 
         if (btn_status==0):
             print("run clciked")
@@ -182,6 +182,7 @@ def question_sub(request,id):
         submission = Submission(team=team,player=user,q_id=question,s_code=user_code,s_language=language)
         
 
+        #it will store one submission of user with answer of all testcases
         status = runCode(id,user_code,language,btn_status,"No")
         if (status.count("AC")==len(status)):
             submission.q_status = "AC"

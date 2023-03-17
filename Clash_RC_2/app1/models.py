@@ -27,8 +27,8 @@ class Question(models.Model):
 class Testcases(models.Model):
     q_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     t_id = models.IntegerField(null=True)  #no need
-    t_ip = models.FileField( upload_to="Question_Data/Uploaded", max_length=100,blank=True)
-    t_op = models.FileField( upload_to="Question_Data/Uploaded", max_length=100,blank=True) 
+    t_ip = models.FileField( upload_to="Question_Data/Uploaded", max_length=100,blank=True,verbose_name="Testcase Input")
+    t_op = models.FileField( upload_to="Question_Data/Uploaded", max_length=100,blank=True,verbose_name="Testcase Output") 
     def __str__(self):
         return f"{self.q_id}"
     

@@ -14,7 +14,7 @@ def execute(code, tc, language):
     return get_output_files()
 
 
-def runCode(que_num, code, language,btn_click_status,user_test):             #btn_click_status true = submit false = run
+def runCode(que_num, code, language,btn_click_status,user_test):             #btn_click_status true = submit and false = run
     TC_Status = []
     # print("fffffffffff",user_test)
     if (btn_click_status==0):
@@ -31,7 +31,7 @@ def runCode(que_num, code, language,btn_click_status,user_test):             #bt
     for tc in TCs:
         
         output, err, rc = execute(code, tc, language)
-        # print("op",output,"err",err,"status",rc,"value of compare",compare(output, tc))
+        print("op",output,"err",err,"status",rc,"value of compare",compare(output, tc))
         if int(rc) != 0:
             TC_Status.append("RE")
         elif compare(output, tc):

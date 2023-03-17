@@ -1,5 +1,6 @@
 <script>
     $("#submit_code").on( "click" ,function () {
+        (this).disabled = true;
         // console.log("Submit Clicked")
         // console.log("{{request.user}}","{{question.q_id}}")
         let user_code = $("#user_code").val();
@@ -22,6 +23,7 @@
                 "btn_clicked":1
             },
             success: function(response) {
+                $("#submit_code").prop("disabled",false);
                 // console.log(response)
                 let tc_div = document.getElementById("tc_div");
                 tc_div.style.display= "none";
@@ -54,6 +56,7 @@
 
     // activaet onclick run
     $("#run_code").on( "click" ,function () {
+        (this).disabled = true;
         // console.log("Submit Clicked")
         // console.log("{{request.user}}","{{question.q_id}}")
         let user_code = $("#user_code").val();
@@ -79,6 +82,8 @@
                 "btn_clicked":0
             },
             success: function(response) {
+                $("#run_code").prop("disabled",false);
+                (this).disabled = false;
                 console.log(response)
                 let tc_div = document.getElementById("tc_div");
                 tc_div.style.display= "none";

@@ -1,3 +1,5 @@
+from app1.models import Question,Submission
+from django.contrib.auth.models import User
 def last_submission(submission_query_set):
     for submission in submission_query_set:
         last_element = submission.s_code
@@ -29,3 +31,35 @@ def get_leaderboard(team_set,user_set):
         dict.append(inner_dict)
     # print(dict)
     return dict
+
+
+def check_accuracy():
+    questions= Question.objects.all()
+    submissions = Submission.objects.all()
+    for question in questions:
+        actual_sub = len(submissions.filter(q_id=question.q_id))
+        right_sub=len(submissions.filter(q_status="AC",q_id=question.q_id))
+        try:
+            accuracy = (right_sub/actual_sub)*100
+            question.q_aqrcy = accuracy
+            question.save()
+        except:
+            pass
+
+# player==user
+def check_solved(user):
+    submissions = Submission.objects.filter(player=user,q_status="AC")
+    ques_list = [str(x.q_id) for x in submissions ]
+    # ques_list = []
+    # for i in range(len(submissions)):
+    #     qes = submissions[i].q_id
+    #     # print(qes)
+    #     if (qes not in ques_list):
+    #         ques_list.append(qes)
+    #     # print(i.q_id)
+    # final_ques_list=[]
+    # for i in ques_list:
+    #     final_ques_list.append(str(i))
+    #     # print(i)
+    # print(final_ques_list)
+    return set(ques_list)
