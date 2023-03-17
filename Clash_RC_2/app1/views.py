@@ -8,8 +8,9 @@ from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 from django.contrib.auth.decorators import login_required
 from .utils import *
+from .decorators import *
 from .models import *
-from .decorators import (only_superuser)
+from .decorators import (check_time, only_superuser)
 from .runner_utils import runCode
 
 @login_required(login_url='login')
@@ -107,14 +108,16 @@ def userRegister(request):
                 return redirect("register")
     return render(request, 'app1/register.html')
 
-
+@check_time
 @login_required(login_url='login')
 def questions(request):
     user=User.objects.get(username=request.user)
     questions = Question.objects.all()
     check_accuracy()
     ques_list=check_solved(user)
-    return render(request,"app1/questions.html",{"questions":questions,"player":user,"ques_list":ques_list})
+    end_time = Contest_time.objects.get(id=1)
+    var = str(end_time.end_time.astimezone())
+    return render(request,"app1/questions.html",{"questions":questions,"player":user,"ques_list":ques_list, "end_time":var})
 
 @login_required(login_url='login')
 def question(request,id):
