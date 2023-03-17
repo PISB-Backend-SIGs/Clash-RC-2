@@ -1,1 +1,1 @@
-print("hesdasdadasllo")
+print(5/0)

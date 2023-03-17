@@ -22,6 +22,7 @@ def run_python():
     # print(run.stdout)
     # print(run.stderr)
     # print(run.returncode)
+    
     out.write(run.stdout)
     er.write(run.stderr)
     rc.write(str(run.returncode))
@@ -92,4 +93,4 @@ def run_c():
 
 
 
-run_cpp()
+run_python()
