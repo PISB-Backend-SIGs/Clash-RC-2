@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "D:\cl\Clash-RC-2-1.0\Clash_RC_2\Code_Runner\code.py", line 1, in <module>
-    print(5/0)
-ZeroDivisionError: division by zero

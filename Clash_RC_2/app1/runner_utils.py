@@ -31,7 +31,7 @@ def runCode(que_num, code, language,btn_click_status,user_test):             #bt
     for tc in TCs:
         
         output, err, rc = execute(code, tc, language)
-        print("op",output,"err",err,"status",rc,"value of compare",compare(output, tc))
+        # print("op",output,"err",err,"status",rc,"value of compare",compare(output, tc))
         if int(rc) != 0:
             TC_Status.append("RE")
         elif compare(output, tc):

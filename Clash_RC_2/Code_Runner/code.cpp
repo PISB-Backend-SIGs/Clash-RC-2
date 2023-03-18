@@ -1,20 +1,16 @@
 #include <iostream>
-#include <string>
-
+ 
 using namespace std;
-
-string reverse_string(string s) {
-    string reversed = "";
-    for (int i = s.length() - 1; i >= 0; i--) {
-        reversed += s[i];
+ 
+int main()
+{
+    int n;
+    cin >> n;
+    cout << n;
+    for (int i = 1; i < n; ++i)
+    {
+        cout << " " << i;
     }
-    return reversed;
-}
-
-int main() {
-    string s;
-    cin>>s;
-    string reversed_s = reverse_string(s);
-    cout << reversed_s << endl;
+    cout << endl;
     return 0;
 }

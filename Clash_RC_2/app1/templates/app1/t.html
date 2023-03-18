@@ -1,61 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-<title>ACE in Action</title>
-<style type="text/css" media="screen">
-    #editor { 
-        position: absolute;
-        height: 100%;
-        width:50%
-    }
-    .sub{
-        position: absolute;
-    }
-</style>
-<!-- <script src="
-https://cdn.jsdelivr.net/npm/ace-builds@1.15.3/src-min-noconflict/ace.min.js
-"></script>  -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.3/ace.min.js"></script>
-
-<link href="
-https://cdn.jsdelivr.net/npm/ace-builds@1.15.3/css/ace.min.css
-" rel="stylesheet">
+	<title>
+		Embedding an online compiler
+		into a website
+	</title>
 </head>
+
 <body>
+	<!-- It will create a division for
+		compiler and embed that into
+		web page-->
+	<div data-pym-src=
+"https://www.jdoodle.com/embed/v0/2IhG?stdin=1&arg=0">
+	</div>
 
-<div id="editor"></div>
-
-
-
-
-<button id="submit-code" class="sub">Submit</button>
-
-    
-<!-- <script src="/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>  -->
-<script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/python");
-</script>
-
-<script>
-
-        // Get the submit button element
-    var submitBtn = document.getElementById('submit-code');
-
-    // Add a click event listener to the submit button
-    submitBtn.addEventListener('click', function() {
-        // Get the content of the editor
-        var code = ace.edit('editor').getValue();
-
-        // Send the code to the backend using an AJAX request
-        console.log(code)
-    })
-
-</script>
-
-
-
+	<!-- This script tag contains the
+		javascript code in the written URL -->
+	<script src=
+"https://www.jdoodle.com/assets/jdoodle-pym.min.js"
+		type="text/javascript">
+	</script>
 </body>
 
 </html>

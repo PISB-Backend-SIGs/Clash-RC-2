@@ -23,4 +23,10 @@ class TeamAdmin (admin.ModelAdmin):
     # list_display = ("team_id","user1","user2","team_score")
 admin.site.register(Team,TeamAdmin)
 
+class Contest_timeAdmin (admin.ModelAdmin):
+    list_display = ("id","start_time","end_time")
+    # list_display = ("team_id","user1","user2","team_score")
+admin.site.register(Contest_time,Contest_timeAdmin)
+
+
 

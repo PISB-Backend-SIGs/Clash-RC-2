@@ -93,4 +93,6 @@ class Submission(models.Model):
     def __str__(self):
         return f"{self.team}"
     
-
+class Contest_time(models.Model):
+    start_time = models.DateTimeField(blank=True)
+    end_time = models.DateTimeField(blank=True)
