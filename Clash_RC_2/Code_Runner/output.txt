@@ -1,0 +1,19 @@
+ Volume in drive D is DATA
+ Volume Serial Number is 56ED-F956
+
+ Directory of D:\cl\Clash-RC-2-1.0\Clash_RC_2
+
+20-03-2023  05:14 PM    <DIR>          .
+18-03-2023  04:45 PM    <DIR>          ..
+17-03-2023  06:54 PM    <DIR>          app1
+17-03-2023  06:54 PM    <DIR>          clashrc1
+20-03-2023  05:15 PM    <DIR>          Code_Runner
+20-03-2023  05:14 PM           237,568 db.sqlite3
+17-02-2023  09:36 AM               686 manage.py
+12-03-2023  11:28 AM    <DIR>          Question_Data
+07-03-2023  12:11 PM               460 run.py
+11-03-2023  11:15 PM               240 todo
+12-03-2023  11:41 AM             4,957 utils.py
+               5 File(s)        243,911 bytes
+               6 Dir(s)  457,311,637,504 bytes free
+0
