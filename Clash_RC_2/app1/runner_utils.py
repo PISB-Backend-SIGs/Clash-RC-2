@@ -10,7 +10,7 @@ def execute(code, tc, language):
     copy_code(code,language)
     copy_input(tc)
     run = subprocess.run("python Code_Runner/code_run.py", shell=True)
-
+    
     return get_output_files()
 
 

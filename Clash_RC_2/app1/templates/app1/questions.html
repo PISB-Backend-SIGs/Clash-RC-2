@@ -12,6 +12,10 @@
     </div>                     
 </div>
 
+<div>
+  <h1>score : {{team_score}}</h1>
+</div>
+
 <div class="container d-flex flex-wrap justify-content-between">
 {% for question in questions %}
     
@@ -22,6 +26,7 @@
         <div class="card-body">
           {% comment %} <h6>{% if question.q_id|stringformat:"s" in ques_list %}Solved{% endif %} </h6> {% endcomment %}
           <h5 class="card-title">{{question.q_title}}</h5>
+          <h5 class="card-title">Points : {{question.q_point}}</h5>
           <p class="card-text">Difficulty &nbsp;{{question.q_diff_level}}</p>
           <input class="btn {% if question.q_id|stringformat:"s" in ques_list %}btn-success {% else %}btn-danger{% endif %}" type="button" value="Solve" onclick="location.href='/question/{{question.q_id}}'">
         </div>

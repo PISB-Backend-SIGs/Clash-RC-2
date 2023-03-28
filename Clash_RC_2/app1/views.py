@@ -18,10 +18,16 @@ def home(request):
     context={
         "user":request.user
     }
-
+    user = User.objects.get(username=request.user)
+    player = Player.objects.get(user=user)
     if request.method == "POST":
+        if (player.p_is_started):
+            return redirect("questions")
         checkbox = request.POST.get("checkbox")
         if checkbox == "checked":
+            player.p_start_time = timezone.now()
+            player.p_is_started = True
+            player.save()
             return redirect("questions")
         else:
             messages.error(request, "Checkbox not checked")
@@ -51,26 +57,7 @@ def userLogin(request):
             except:
                 player=Player(user=user,p_is_loged_in=True)
                 player.save()
-                login(request, user)
-
-            # if request.user.is_superuser:         #to direct login to admin pannel
-            #     return redirect("settingwale")
-            
-            # if not(Player.objects.filter(user=request.user).exists()):
-            #     print(request.user)
-            #     player=Player(user=request.user)
-            #     player.save()
-            
-
-            # obj  = Player.objects.filter(user=request.user).exists()
-            # print(obj)  #false
-
-            # try:
-            #     obj  = Player.objects.filter(user=request.user).exists
-            #     # if obj is None:
-            #         obj.save()
-            
-            
+                login(request, user)            
             return redirect("home")
         else:
             messages.error(request, "Login Failed due to invalid credentials!")
@@ -112,12 +99,13 @@ def userRegister(request):
 @login_required(login_url='login')
 def questions(request):
     user=User.objects.get(username=request.user)
+    team = Team.objects.get(user=user)
     questions = Question.objects.all()
     check_accuracy()
-    ques_list=check_solved(user)
+    ques_list=check_solved(team)   #To show user which questions are solved
     end_time = Contest_time.objects.get(id=1)
     var = str(end_time.end_time.astimezone())
-    return render(request,"app1/questions.html",{"questions":questions,"player":user,"ques_list":ques_list, "end_time":var})
+    return render(request,"app1/questions.html",{"questions":questions,"player":user,"ques_list":ques_list, "end_time":var,"team_score":team.team_score})
 
 @login_required(login_url='login')
 def question(request,id):
@@ -188,7 +176,17 @@ def question_sub(request,id):
         #it will store one submission of user with answer of all testcases
         status = runCode(id,user_code,language,btn_status,"No")
         if (status.count("AC")==len(status)):
-            submission.q_status = "AC"
+            try:
+                if(Submission.objects.filter(team=team,q_id=id,q_status="AC")):
+                    submission.q_status = "AC"
+            except:
+                submission.q_status = "AC"
+                marks_reduce = calc_score(Submission.objects.filter(team=team,q_id=id))  #It gives how many marks will be reducing
+                team.team_score += (question.q_point - marks_reduce)    #It will store marks for that question in team 
+                submission.s_pt = team.team_score
+                question.q_point -=1
+                question.save()
+                team.save()
         else:
             submission.q_status = "WA"
         submission.save()

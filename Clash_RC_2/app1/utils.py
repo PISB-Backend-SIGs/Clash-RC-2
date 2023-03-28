@@ -47,8 +47,8 @@ def check_accuracy():
             pass
 
 # player==user
-def check_solved(user):
-    submissions = Submission.objects.filter(player=user,q_status="AC")
+def check_solved(team):
+    submissions = Submission.objects.filter(team=team,q_status="AC")
     ques_list = [str(x.q_id) for x in submissions ]
     # ques_list = []
     # for i in range(len(submissions)):
@@ -63,3 +63,10 @@ def check_solved(user):
     #     # print(i)
     # print(final_ques_list)
     return set(ques_list)
+
+#It will calculate score of that question for player
+def calc_score(submissions):
+    numberOfWrongSubmission = len(submissions.filter(q_status="WA"))
+    numberOfRightSubmission = len(submissions.filter(q_status="AC"))
+    marks_reduce = numberOfWrongSubmission*10
+    return marks_reduce
