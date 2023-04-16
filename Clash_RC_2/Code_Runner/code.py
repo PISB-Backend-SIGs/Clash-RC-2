@@ -1,2 +1,2 @@
-import os
-print(os.system('dir'))
+while(1):
+    print("4")

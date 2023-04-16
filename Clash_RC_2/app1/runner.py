@@ -1,14 +1,16 @@
-import subprocess
+import subprocess,os
 import time
+codeRunnerPath = os.path.abspath("Code_Runner")
+print(codeRunnerPath,"dddddddddddddddddddddkkkkkkkkkkkkkkkkkkkkkkkk")
 def run_python():
-    code_path = "Code_Runner/code.py"
-    tc_path = "Code_Runner/input.txt"
+    code_path = f"{codeRunnerPath}/code.py"
+    tc_path = f"{codeRunnerPath}/input.txt"
     # x = open(tc_path,"r")
     # y = open(code_path,"r")
     # print(x.read(),y.read())
-    er=open('Code_Runner/error.txt','w+')
-    rc=open('Code_Runner/status.txt','w+')
-    out=open('Code_Runner/output.txt','w+')
+    er=open(f'{codeRunnerPath}/error.txt','w+')
+    rc=open(f'{codeRunnerPath}/status.txt','w+')
+    out=open(f'{codeRunnerPath}/output.txt','w+')
     # run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True,timeout=1)
     st =time.time()
     try:
@@ -31,17 +33,16 @@ def run_python():
     out.close()
 
 def run_cpp():
-    bin_file_path = "Code_Runner"
-    code_path = "Code_Runner/code.cpp"
-    tc_path = "Code_Runner/input.txt"
+    code_path = f"{codeRunnerPath}/code.cpp"
+    tc_path = f"{codeRunnerPath}/input.txt"
     # x = open(tc_path,"r")
     # y = open(code_path,"r")
     # print(x.read(),y.read())
-    er=open('Code_Runner/error.txt','w+')
-    rc=open('Code_Runner/status.txt','w+')
-    out=open('Code_Runner/output.txt','w+')
+    er=open(f'{codeRunnerPath}/error.txt','w+')
+    rc=open(f'{codeRunnerPath}/status.txt','w+')
+    out=open(f'{codeRunnerPath}/output.txt','w+')
     # run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True)
-    run = subprocess.run(['g++', '-o', f"{bin_file_path}/code", f"{code_path}"], capture_output=True, text=True)
+    run = subprocess.run(['g++', '-o', f"{codeRunnerPath}/code", f"{code_path}"], capture_output=True, text=True)
     # print(run)
     if run.returncode != 0:
         rc.write(str(run.returncode))
@@ -51,7 +52,7 @@ def run_cpp():
         print('Compilation failed. Errors written to errors.txt.')
     else:
         with open(f"{tc_path}", "r") as input_file:
-            program_result = subprocess.run([f"{bin_file_path}/./code.exe "],stdin=input_file, capture_output=True, text=True)
+            program_result = subprocess.run([f"{codeRunnerPath}/./code"],stdin=input_file, capture_output=True, text=True)
             out.write(program_result.stdout)
             er.write(program_result.stderr)
             rc.write(str(run.returncode))
@@ -62,17 +63,16 @@ def run_cpp():
 
 
 def run_c():
-    bin_file_path = "Code_Runner"
-    code_path = "Code_Runner/code.c"
-    tc_path = "Code_Runner/input.txt"
+    code_path = f"{codeRunnerPath}/code.c"
+    tc_path = f"{codeRunnerPath}/input.txt"
     # x = open(tc_path,"r")
     # y = open(code_path,"r")
     # print(x.read(),y.read())
-    er=open('Code_Runner/error.txt','w+')
-    rc=open('Code_Runner/status.txt','w+')
-    out=open('Code_Runner/output.txt','w+')
+    er=open(f'{codeRunnerPath}/error.txt','w+')
+    rc=open(f'{codeRunnerPath}/status.txt','w+')
+    out=open(f'{codeRunnerPath}/output.txt','w+')
     # run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True)
-    run = subprocess.run(['gcc', '-o', f"{bin_file_path}/code", f"{code_path}"], capture_output=True, text=True)
+    run = subprocess.run(['gcc', '-o', f"{codeRunnerPath}/code", f"{code_path}"], capture_output=True, text=True)
     # print(run)
     if run.returncode != 0:
         rc.write(str(run.returncode))
@@ -82,7 +82,7 @@ def run_c():
         print('Compilation failed. Errors written to errors.txt.')
     else:
         with open(f"{tc_path}", "r") as input_file:
-            program_result = subprocess.run([f"{bin_file_path}/./code.exe "],stdin=input_file, capture_output=True, text=True)
+            program_result = subprocess.run([f"{codeRunnerPath}/./code "],stdin=input_file, capture_output=True, text=True)
             out.write(program_result.stdout)
             er.write(program_result.stderr)
             rc.write(str(run.returncode))

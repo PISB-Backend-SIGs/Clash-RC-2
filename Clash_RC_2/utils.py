@@ -1,7 +1,7 @@
 import subprocess
 import shutil
 import os
-from . models import Question, Testcase
+# from . models import Question, Testcase
 from subprocess import STDOUT, check_output
 from celery import shared_task
 

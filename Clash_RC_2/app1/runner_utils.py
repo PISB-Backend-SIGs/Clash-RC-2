@@ -4,12 +4,16 @@ import os
 from .models import Question, Testcases
 from subprocess import STDOUT, check_output
 # from celery import shared_task
+codeRunnerPath = os.path.abspath("Code_Runner")
+# codeRunnerPath="Clash_RC_2/Code_Runner"
+runnerPath = os.path.dirname(__file__)
+print(codeRunnerPath,"dddjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
 
 def execute(code, tc, language):
     copy_run_py(language)
     copy_code(code,language)
     copy_input(tc)
-    run = subprocess.run("python Code_Runner/code_run.py", shell=True)
+    run = subprocess.run(f"python {codeRunnerPath}/code_run.py", shell=True)
     
     return get_output_files()
 
@@ -19,7 +23,7 @@ def runCode(que_num, code, language,btn_click_status,user_test):             #bt
     # print("fffffffffff",user_test)
     if (btn_click_status==0):
         output, err, rc = execute_run(code, user_test, language)
-        if int(rc) !=0:
+        if rc !=0:
             TC_Status.append(err)
         else:
             TC_Status.append(output)
@@ -52,8 +56,9 @@ def compare(output, tc):
 
 
 def copy_run_py(language):
-    src = "app1/runner.py"
-    dst = f"Code_Runner/code_run.py"
+    src = f"{runnerPath}/runner.py"
+    dst = f"{codeRunnerPath}/code_run.py"
+    print(src,"\n",dst,"\nsdsssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
     shutil.copyfile(src, dst)
     file1 = open(dst, "a")  # append mode
     file1.write(f"\nrun_{language}()")
@@ -61,24 +66,24 @@ def copy_run_py(language):
 
 def copy_code(code,language):
     if (language=="python"):
-        file_path = f"Code_Runner/code.py"
+        file_path = f"{codeRunnerPath}/code.py"
     elif (language=="cpp"):
-        file_path = f"Code_Runner/code.cpp"
+        file_path = f"{codeRunnerPath}/code.cpp"
     elif (language=="c"):
-        file_path = f"Code_Runner/code.c"
+        file_path = f"{codeRunnerPath}/code.c"
     with open(file_path, 'w+') as file:
         file.write(code)
         file.close()
 
 def copy_input(tc):
-    dst = "Code_Runner/input.txt"
+    dst = f"{codeRunnerPath}/input.txt"
     src = tc.t_ip.path
     shutil.copy(src, dst)
 
 def get_output_files():
-    output = open("Code_Runner/output.txt").read()
-    err = open("Code_Runner/error.txt").read()
-    rc = open("Code_Runner/status.txt").read()
+    output = open(f"{codeRunnerPath}/output.txt").read()
+    err = open(f"{codeRunnerPath}/error.txt").read()
+    rc = open(f"{codeRunnerPath}/status.txt").read()
     # print("ddddddddddd",rc,"type ",type(rc))
     return output, err, rc
 
@@ -86,7 +91,7 @@ def get_output_files():
 #when run clicke
 def copy_test_input(tc):
     # print("dfddddddddd",tc)
-    dst = open("Code_Runner/input.txt","w")
+    dst = open(f"{codeRunnerPath}/input.txt","w")
     dst.write(tc)
     dst.close()
 
@@ -94,6 +99,6 @@ def execute_run(code, tc, language):
     copy_run_py(language)
     copy_code(code,language)
     copy_test_input(tc)
-    run = subprocess.run("python Code_Runner/code_run.py", shell=True)
+    run = subprocess.run(f"python {codeRunnerPath}/code_run.py", shell=True)
 
     return get_output_files()
