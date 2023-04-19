@@ -1,0 +1,12 @@
+FROM python:3.8-slim-buster
+
+WORKDIR /app
+
+# COPY requirments.txt requirments.txt
+# RUN pip install -r requirments.txt
+
+COPY Code_Runner /app/Code_Runner
+
+
+CMD ["python", "Code_Runner/code_run.py"]
+

@@ -9,9 +9,10 @@ def execute(code, tc, language):
     copy_run_py(language)
     copy_code(code,language)
     copy_input(tc)
-    run = subprocess.run("python Code_Runner/code_run.py", shell=True)
+    run = subprocess.run("docker exec test_container python3 src/code_run.py", shell=True)
 
     return get_output_files()
+
 
 
 def runCode(que_num, code, language,btn_click_status,user_test):             #btn_click_status true = submit and false = run

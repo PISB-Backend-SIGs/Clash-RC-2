@@ -1,2 +1,1 @@
-import os
-print(os.system('dir'))
+print("b")

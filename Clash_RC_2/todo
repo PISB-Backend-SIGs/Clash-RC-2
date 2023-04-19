@@ -1,14 +1,18 @@
 // 05-03-2023
-+ Add indication (red,green)
-+ Individual last subn
-+ Subn page
+- Add indication (red,green)
+- Individual last subn
+- Subn page
 - Requirement.txt
 + Timer
 
 // 11-03-2023
-+ Display testcases
-+ Time limit
-+ Memmory limit
-+ All lang
+- Display testcases
++ Time limit.
++ Memmory limit.
+- All lang
 
 (Note: Change '+' to '-' once the task is done)
+- add score logic.
++ bugs nikalne ( teams from backend )
+
+ 
