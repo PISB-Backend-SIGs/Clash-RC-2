@@ -28,76 +28,120 @@
 
 
 ###6
-# while(1):
-#     print("hello")
+# import signal
+# timeout_limit = 1
+# import time,resource,os,subprocess
+# def set_time_limit(time_limit):
+#     def signal_handler(signum, frame):
+#         raise TimeoutError
+#     signal.signal(signal.SIGALRM, signal_handler)
+#     signal.alarm(timeout_limit)
+# # tracemalloc.start()
+# set_time_limit(timeout_limit)
 
-import resource
-print("dffffffffffffffffffff")
+# MEM_LIMIT = 256*1024*1024
+# def set_memory_limit():
+#     resource.setrlimit(resource.RLIMIT_CPU, (timeout_limit, timeout_limit))
+#     resource.setrlimit(resource.RLIMIT_AS, (MEM_LIMIT, MEM_LIMIT))
+
+# code="while(1):\n\tprint('hello')"
+
+# st = time.time()
+# p = subprocess.run(f"python3 {code}",shell=True,text=True,preexec_fn=set_memory_limit)
+# et = time.time()
+# print("timessssssssssssssssssssssssssssssssss ",et-st)
+# print(p)
 
 
+# # # import resource
+# print("dffffffffffffffffffff")
+# print(6/0)
 
+#runtime err
+# print(n)
+
+# list = [2]
+# print(list[1])
 # print("dddddddddddd")
+
+
+
+
+#value rer
+# s = int("val")
+
+#keyerr
+# dict={"d":2}
+# print(dict["s"])
 # s="dfsdfs"
-# i = input()
-# print(i)
+i = input()
+print(i)
+# displaying the memory
+#  (current, peak),
 
-# a simple program that keeps allocating memory until the process runs out of memory
-# inner psutil function
-import psutil,os
-def process_memory():
-    process = psutil.Process(os.getpid())
-    mem_info = process.memory_info()
-    return mem_info.rss
+# while(True):
+#     print("Dd")
+# t=10000000000000000000000000000000000000000000000
+# while(t>0):
+#     print(t)
+#     t -=1
  
-# decorator function
-def profile(func):
-    def wrapper(*args, **kwargs):
- 
-        mem_before = process_memory()
-        result = func(*args, **kwargs)
-        mem_after = process_memory()
-        print("{}:consumed memory: {:,}".format(
-            func.__name__,
-            mem_before, mem_after, mem_after - mem_before))
- 
-        return result
-    return wrapper
- 
-# instantiation of decorator function
-
-import numpy as np
-
-# Generate some sample data from a normal distribution
-mu = 3.0
-sigma = 2.0
-n = 100
-data = np.random.normal(mu, sigma, n)
-
-# Define the likelihood function for a normal distribution
-# @profile
-def normal_likelihood(theta, data):
-    mu, sigma = theta
-    n = len(data)
-    log_likelihood = -n/2 * np.log(2*np.pi) - n*np.log(sigma) \
-        - np.sum((data-mu)**2)/(2*sigma**2)
-    return -log_likelihood
-
-# Find the maximum likelihood estimate by grid search
-mu_range = np.linspace(0.0, 6.0, 100)
-sigma_range = np.linspace(0.1, 4.0, 100)
-mu_mle = None
-sigma_mle = None
-max_log_likelihood = -np.inf
-for mu_candidate in mu_range:
-    for sigma_candidate in sigma_range:
-        log_likelihood = normal_likelihood([mu_candidate, sigma_candidate], data)
-        if log_likelihood > max_log_likelihood:
-            max_log_likelihood = log_likelihood
-            mu_mle = mu_candidate
-            sigma_mle = sigma_candidate
-
-print("MLE for mu:", mu_mle)
-print("MLE for sigma:", sigma_mle)
+#type error
+# my_list = [1, 2, 3]
+# result = my_list / 2
+# print(result)
 
 # process_memory_usage = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss 
-# print(process_memory_usage)
+# print(process_memory_usage,"meemor")
+
+# import  os
+# codeRunnerPath = os.path.abspath("testsubprocess")
+# # codeRunnerPath="Clash_RC_2/Code_Runner"
+# runnerPath = os.path.dirname(__file__)
+# print(codeRunnerPath,"sssssssssssss",runnerPath)
+
+# scripts_file_path = f"{runnerPath}/test.py"
+# ip_file_path = f"{runnerPath}/ip.txt"
+# with open(ip_file_path, 'r') as f:
+#     ip_contents = f.read()
+
+# op_file_path = f"{runnerPath}/op.txt"
+
+# filename = f"{scripts_file_path}"
+# size_in_bytes = os.path.getsize(filename)
+# size_in_mb = size_in_bytes / (1024 * 1024)
+
+# print(f"Size of {filename}: {size_in_mb} MB")
+
+
+# m =tracemalloc.get_traced_memory()
+# print("memry usage",m,"bytes")
+ 
+# # stopping the library
+# tracemalloc.stop()
+
+
+
+
+# import numpy as np
+# from scipy.stats import norm
+
+
+# # Generate some random data
+# np.random.seed(123)
+# data = np.random.normal(0, 1, size=100)
+
+# # Define the log-likelihood function
+# def log_likelihood(theta, data):
+#     mu, sigma = theta
+#     ll = np.sum(norm.logpdf(data, mu, sigma))
+#     return ll
+
+# # Perform maximum likelihood estimation
+# from scipy.optimize import minimize
+
+# mle = minimize(lambda x: -log_likelihood(x, data), x0=[0, 1])
+# print(mle)
+ 
+# # stopping the library
+# tracemalloc.stop()

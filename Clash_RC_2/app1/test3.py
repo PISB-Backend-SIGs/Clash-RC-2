@@ -100,15 +100,10 @@ def RunByLang(lang):
         process = subprocess.Popen(['g++', '-o', f"{FilePath}/code", f"{CppFile}"],stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit )
         if (process.returncode != 0):
             return process
-        process = subprocess.Popen([f"{FilePath}/./code"],stdin=ip_contents,stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit )
+        process = subprocess.Popen([f"{FilePath}/./code"],stdin=tc_path,stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit )
         return process
     
 # test the function with a sample command
 command = ['python3', f'{PythonFile}']
 result = execute_user_code(command)
 print("result   ",result)
-
-
-
-
-

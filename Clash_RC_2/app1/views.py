@@ -160,8 +160,8 @@ def question_sub(request,id):
         if (btn_status==0):
             print("run clciked")
             user_test_ip = request.POST.get("testip")
-            status = runCode(id,user_code,language,btn_status,user_test_ip)
-
+            status = list(runCode(id,user_code,language,btn_status,user_test_ip))
+            print("from utils to show op",status)
             dict = {
                 "status":1,
                 "tc_count":status,

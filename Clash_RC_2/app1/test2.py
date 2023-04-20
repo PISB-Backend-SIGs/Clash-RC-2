@@ -34,6 +34,7 @@ with open(ip_file_path, 'r') as f:
     ip_contents = f.read()
 
 op_file_path = f"{runnerPath}/op.txt"
+
 time_limit = 1
 memory_limit = 256*1024*1024
 

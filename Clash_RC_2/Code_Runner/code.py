@@ -1,2 +1,6 @@
-while(1):
-    print("4")
+# def reverse_string(string):
+#     print( string[::-1])
+
+# reverse_string(input())
+
+print("dddd")

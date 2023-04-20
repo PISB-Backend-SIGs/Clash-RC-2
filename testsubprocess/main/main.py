@@ -95,8 +95,8 @@
 # import resource,os,signal
 # codeRunnerPath = os.path.abspath("testsubprocess")
 # # codeRunnerPath="Clash_RC_2/Code_Runner"
-# runnerPath = os.path.dirname(__file__)
-# print(codeRunnerPath,"sssssssssssss",runnerPath)
+# FilePath = os.path.dirname(__file__)
+# print(codeRunnerPath,"sssssssssssss",FilePath)
 
 
 # # set the CPU time limit to 1 second
@@ -107,12 +107,12 @@
 # resource.setrlimit(resource.RLIMIT_AS, (1 * 1024 * 1024, 1 * 1024 * 1024))
 
 # # execute the user's code
-# scripts_file_path = f"{runnerPath}/test.py"
-# ip_file_path = f"{runnerPath}/ip.txt"
+# scripts_file_path = f"{FilePath}/test.py"
+# ip_file_path = f"{FilePath}/ip.txt"
 # with open(ip_file_path, 'r') as f:
 #     ip_contents = f.read()
 
-# op_file_path = f"{runnerPath}/op.txt"
+# op_file_path = f"{FilePath}/op.txt"
 
 
 
@@ -163,9 +163,12 @@
 ###7
 # import subprocess
 # import signal,os
-
+# resource_limits = {
+#     'memory': 256000,  # 100 MB
+#     'time': 1,  # 1 second
+# }
 # # set the timeout limit to 1 second
-# timeout = 1
+# # timeout = 1
 
 # # define a function to handle the timeout
 # def handle_timeout(signum, frame):
@@ -174,20 +177,20 @@
 # # execute the user's code
 # codeRunnerPath = os.path.abspath("testsubprocess")
 # # codeRunnerPath="Clash_RC_2/Code_Runner"
-# runnerPath = os.path.dirname(__file__)
-# print(codeRunnerPath,"sssssssssssss",runnerPath)
+# FilePath = os.path.dirname(__file__)
+# print(codeRunnerPath,"sssssssssssss",FilePath)
 
-# scripts_file_path = f"{runnerPath}/test.py"
-# ip_file_path = f"{runnerPath}/ip.txt"
+# scripts_file_path = f"{FilePath}/test.py"
+# ip_file_path = f"{FilePath}/ip.txt"
 # with open(ip_file_path, 'r') as f:
 #     ip_contents = f.read()
 
-# op_file_path = f"{runnerPath}/op.txt"
+# op_file_path = f"{FilePath}/op.txt"
 # process = subprocess.Popen(['python3', f'{scripts_file_path}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 # # set the signal handler for the timeout
 # signal.signal(signal.SIGALRM, handle_timeout)
-# signal.alarm(timeout)
+# signal.alarm(resource_limits["time"])
 
 # # wait for the process to finish
 # try:
@@ -198,95 +201,225 @@
 #     process.kill()
 #     print('TLE')
 #     exit()
-
+# print(stdout,stderr)
 # # check the stderr for any other errors
 # if stderr:
 #     print(stderr.decode())
 #     exit()
 
 # # print the stdout if everything is okay
-# print(stdout.decode())
+# print("sss",stdout.decode())
 
 
 
 
+import os
+codeRunnerPath = os.path.abspath("testsubprocess")
+# codeRunnerPath="Clash_RC_2/Code_Runner"
+
+#It will give current file path 
+#And our other files are in same folder
+FilePath = os.path.dirname(__file__)
+print("File Path ",FilePath)
+
+#File in which users code is present
+scripts_file_path = f"{FilePath}/test.py"
+#File in which ip testcase is present
+tc_path = open(f'{FilePath}/ip.txt','r')
+# with open(ip_file_path, 'r') as f:
+#     ip_contents = f.read()
+
+op_file_path = open(f"{FilePath}/op.txt","w+")
 
 ####8
 import subprocess
 import signal,resource
 import psutil,re
-import os
-# set resource limits
-resource_limits = {
-    'memory': 10000,  # 100 MB
-    'cpu': 1,  # 1 second
-}
 
-codeRunnerPath = os.path.abspath("testsubprocess")
-# codeRunnerPath="Clash_RC_2/Code_Runner"
-runnerPath = os.path.dirname(__file__)
-print(codeRunnerPath,"sssssssssssss",runnerPath)
+ceErrors = [ "SyntaxError:","NameError:","TypeError:","ImportError:","IndentationError:","LogicError:"]
+reErrors = ["ZeroDivisionError:","IndexError:","KeyError:","AttributeError:","ValueError:","RuntimeError","StopIteration","RecursionError","OSError"]
+#"MemoryError"
 
-scripts_file_path = f"{runnerPath}/test.py"
-ip_file_path = f"{runnerPath}/ip.txt"
-with open(ip_file_path, 'r') as f:
-    ip_contents = f.read()
+# # define a timeout limit for the user's code
+TimeoutLimit = 1
+def set_time_limit(time_limit):
+    def signal_handler(signum, frame):
+        raise TimeoutError
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(TimeoutLimit)
 
-op_file_path = f"{runnerPath}/op.txt"
-# define a timeout limit for the user's code
-timeout_limit = 5
+# signal.signal(signal.SIGALRM, handle_timeout)
+# signal.alarm(timeout_limit)
 
-# define a function to handle timeouts
-def handle_timeout(signum, frame):
-    raise TimeoutError
 
+# # define a function to handle timeouts
+# def handle_timeout(signum, frame):
+#     raise TimeoutError
+import time
+MemoryLimit = 256 * 1024 * 1024   #on 17 mle
+def set_memory_limit():
+    # resource.setrlimit(resource.RLIMIT_CPU, (timeout_limit, timeout_limit))
+    # resource.setrlimit(resource.RLIMIT_AS, (MemoryLimit, MemoryLimit))
+    resource.setrlimit(resource.RLIMIT_AS, (MemoryLimit, MemoryLimit))
 # define a function to execute the user's code and detect errors
+
+def RunByLang():
+    # process = subprocess.Popen(command,stdin=tc_path,stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit)
+    process = subprocess.Popen(['g++', '-o', f"{FilePath}/code", f"{FilePath}/test.cpp"], capture_output=True, text=True)
+    return process
+   
+
+
 def execute_user_code(command):
     try:
-        # execute the command and get stdout and stderr
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        pid = process.pid
-        print(pid)
-        # process.wait()
-        # stdout, stderr = process.communicate()
-        process_memory_usage = psutil.Process(pid).memory_info().rss
-    
-        
-        # set a timer for the command execution
-        signal.signal(signal.SIGALRM, handle_timeout)
-        signal.alarm(timeout_limit)
-
-        # wait for the command to finish and get the stdout and stderr
+        set_time_limit(TimeoutLimit)
+        process = subprocess.Popen(command,stdin=tc_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit)
+        # process = RunByLang()
+        # process2 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit)
+            
+        #Cpp 
+        # process = subprocess.Popen(['g++', '-o', f"{FilePath}/code", f"{FilePath}/test.cpp"],stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit )
+        # print(process)
+        # process = subprocess.Popen([f"{FilePath}/./code"],stdin=tc_path,stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit )
+        # print(process)
+        # # wait for the command to finish and get the stdout and stderr
         stdout, stderr = process.communicate()
-        signal.alarm(0)
+        op_file_path.write(stdout.decode().strip())
+        # stdout2, stderr2 = process2.communicate()
+        # print(stderr2,stdout2)
+        CopyFilesToTxt(stdout,stderr)
+        ListOfReturn =stderr.decode().strip().split()
+        print(ListOfReturn)
+        # signal.alarm(0)
 
         # check for any errors in stderr
-
-        # process_memory_usage = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss 
-        print(process_memory_usage,"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-        # check if the memory usage exceeds the limit
-        if process_memory_usage > resource_limits['memory']:
-            # kill the subprocess if it exceeds the memory limit
-            print(process.returncode)
-            process.kill()
-            print('MLE error')
         if process.returncode != 0:
-            return "CE"
-        else:
-            # no errors detected, return the output
-            return stdout.decode().strip()
+            process.kill()
+            if any(error in ListOfReturn for error in ceErrors):
+                return "CE"
+            elif any(error in ListOfReturn for error in reErrors):
+                return "RE"
+            elif "MemoryError" in ListOfReturn:
+                return "MLE"
+            else:
+                return "WA"
 
+            # print(process.returncode)
+            # print(stderr.decode())
+            # print(stdout.decode())
+            # print(ZeroDivisionError in str(stderr.decode()))
+            # print(str(stderr.decode()).split())
+            # print( "SyntaxError:" in str(stderr.decode()).split())
+            # print( "ZeroDivisionError:" in str(stderr.decode()).split())
+            # # print((stderr).find("ZeroDivisionError"))
+            # s =list((stderr.decode().strip()).split())
+            # # s[s.index("File")] = "ddddd"
+            # print("index ",s)
+            # return "CE"
+        else:
+            if (process.returncode == 0):
+                return "AC"
+            else:
+                return "WA"
+            
+            # no errors detected, return the output
+            # print(stdout)
+            # print(stdout.decode())
+            # print(stdout.decode().strip())
+            # print(process.returncode)
+            # print(ZeroDivisionError in str(stderr.decode()))
+            # return stdout.decode().strip()
+    
     except TimeoutError:
         # handle timeout error
         process.kill()
+        stdout, stderr = process.communicate()
+        CopyFilesToTxt(stdout,stderr)
+
+        # stderr = process.stderr.read()
+        ListOfReturn =stderr.decode().strip().split()
+        # s[s.index("File")] = "ddddd"
+        # print("index ",ListOfReturn)
+        # print("inside 1timeout ",str(stderr.decode()).split())
+        if ("MemoryError" in ListOfReturn):
+            print("present MLE")
+            return "MLE"
+        
         return "TLE"
 
+def CopyFilesToTxt(stdout,stderr):
+    er=open(f'{FilePath}/error.txt','w+')
+    out=open(f'{FilePath}/output.txt','w+')
+
+    out.write(stdout.decode().strip())
+    er.write(stderr.decode().strip())
 
 # test the function with a sample command
 command = ['python3', f'{scripts_file_path}']
 result = execute_user_code(command)
 print("result   ",result)
 
+ 
+# starting the monitoring
+
+
+# import subprocess
+# import resource
+# import signal
+ErrorCodes={
+  "AC": 0, 
+  "WA": 1, 
+  "MLE":2, 
+  "TLE":3, 
+  "CE": 4, 
+  "RE": 5, 
+}
+
+# Define a function to set memory limit for the subprocess
+# def set_memory_limit(memory_limit):
+#     soft_limit = hard_limit = memory_limit
+#     resource.setrlimit(resource.RLIMIT_AS, (soft_limit, hard_limit))
+
+# # Define a function to set time limit for the subprocess
+# time_limit = 1
+# def set_time_limit(time_limit):
+#     def signal_handler(signum, frame):
+#         raise TimeoutError
+#         # raise TimeoutError("Subprocess exceeded time limit")
+#     signal.signal(signal.SIGALRM, signal_handler)
+#     signal.alarm(time_limit)
+
+
+# MEM_LIMIT = 2 * 1024 * 1024  # 256 mb
+# # TIME_LIMIT = 10  # 1 s
+
+
+# # Define a function to run the subprocess with memory and time limits
+# def run_subprocess_with_limits(command):
+#     # set_memory_limit(memory_limit)
+#     # set_time_limit(TIME_LIMIT)
+#     try:
+#         result = subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,preexec_fn=resource.setrlimit(resource.RLIMIT_AS, (memory_limit, memory_limit)))
+#         # result = subprocess.run(command,preexec_fn=set_limit_resource)
+#         # op ,er = result.communicate()
+#         result.wait()
+#     except TimeoutError:
+#         print("timeout")
+#     except Exception as e:
+#         print("dasdas")
+#     # except TimeoutError as e:
+#     #     print("timeout",e,result.returncode)
+#     #     signal.alarm(0)
+#     # except subprocess.CalledProcessError as e:
+#     #     print("error",e.returncode)
+#     # else:
+#     #     print("code ",result.returncode)
+#     #     print("op",op)
+#     #     print("ercod",er)
+
+
+# run_subprocess_with_limits(['python3', f'{scripts_file_path}'])
+# # run_subprocess_with_limits(['python3', f'{scripts_file_path}'], memory_limit=1*1024*1024, time_limit=2)
 
 
 
@@ -301,15 +434,15 @@ print("result   ",result)
 # import subprocess,os
 # codeRunnerPath = os.path.abspath("testsubprocess")
 # # codeRunnerPath="Clash_RC_2/Code_Runner"
-# runnerPath = os.path.dirname(__file__)
-# print(codeRunnerPath,"sssssssssssss",runnerPath)
+# FilePath = os.path.dirname(__file__)
+# print(codeRunnerPath,"sssssssssssss",FilePath)
 
-# scripts_file_path = f"{runnerPath}/test.py"
-# ip_file_path = f"{runnerPath}/ip.txt"
+# scripts_file_path = f"{FilePath}/test.py"
+# ip_file_path = f"{FilePath}/ip.txt"
 # with open(ip_file_path, 'r') as f:
 #     ip_contents = f.read()
 
-# op_file_path = f"{runnerPath}/op.txt"
+# op_file_path = f"{FilePath}/op.txt"
 
 # # set resource limits
 # resource_limits = {
