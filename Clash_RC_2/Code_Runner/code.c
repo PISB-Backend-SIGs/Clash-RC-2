@@ -1,14 +1,11 @@
-
-def find_max_product(nums):
-    if len(nums) < 2:
-        return None
-
-    nums.sort()
-    if nums[-1] <= 0:
-        return nums[-2] * nums[-1]
-
-    return max(nums[-1] * nums[-2], nums[0] * nums[1])
-
-a= list(map(int,input().split()))
-s = find_max_product(a)
-print(s)
+#include <stdio.h>  
+#include <string.h>  
+int main()  
+{  
+    char str[40]; 
+    scanf ("%s", str);  
+      
+    // use strrev() function to reverse a string  
+    printf (" \n After the reverse of a string: %s ",str);  
+    return 0;  
+}  

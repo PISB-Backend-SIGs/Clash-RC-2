@@ -156,11 +156,12 @@ def RunByLang(lang):
 
 
 def execute_cpp_code():
-    args = ['g++', '-o', 'code', CppFile] # compile the file and generate an output executable
+    args = ['g++', '-o', f'{FilePath}/code', CppFile] # compile the file and generate an output executable
 
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit)
     output, error = process.communicate()
-    # print(process.returncode)
+    # error = process.stderr
+    print("executable file ",error)
 
     if error:
         CopyReturnCode(error,ErrorCodes["CE"])
@@ -193,6 +194,54 @@ def execute_cpp_code():
             print("Runtime Error2: TLE ")
             # print(out.decode('utf-8'))
         else:
+            print("outtttttttttttt ",out)
+            CopyOpFile(out,ErrorCodes["AC"])
+            print("AC CPP")
+            # print(out.decode('utf-8'))
+
+
+
+
+def execute_c_code():
+    args = ['gcc', '-o', f'{FilePath}/ccode', CFile] # compile the file and generate an output executable
+
+    process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit)
+    output, error = process.communicate()
+    # error = process.stderr
+    print("executable file ",error)
+
+    if error:
+        CopyReturnCode(error,ErrorCodes["CE"])
+        print("Compile Error:")
+        # print(error.decode('utf-8'))
+    else:
+        executable = f'{FilePath}/./ccode'
+        try:
+            process = subprocess.Popen(executable, stdin=ip_file_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, preexec_fn=set_memory_limit,shell=False)
+            # print(process.returncode)
+
+            out, err = process.communicate(timeout=1) # timeout after 5 seconds
+            # print("try block err : ",err.decode().split())
+            print("try block err : ")
+        except subprocess.TimeoutExpired:
+            process.kill()    # terminate the process if it exceeds the timeout
+            CopyReturnCode(err,ErrorCodes["TLE"])
+            print("Time Limit Exceeded")
+            exit()
+        except subprocess.CalledProcessError:
+            CopyReturnCode(err,ErrorCodes["MLE"])
+            print("inside 3rd except : ")
+
+        if err:
+            CopyReturnCode(err,ErrorCodes["RE"])
+            print("Runtime Error1:")
+            # print(err.decode('utf-8'))
+        elif process.returncode != 0:
+            CopyReturnCode(err,ErrorCodes["TLE"])
+            print("Runtime Error2: TLE ")
+            # print(out.decode('utf-8'))
+        else:
+            print("outtttttttttttt ",out)
             CopyOpFile(out,ErrorCodes["AC"])
             print("AC CPP")
             # print(out.decode('utf-8'))
@@ -204,4 +253,4 @@ def execute_cpp_code():
 
 
 
-execute_python_code()
+execute_c_code()

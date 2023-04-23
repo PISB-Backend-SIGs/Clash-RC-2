@@ -1,2 +1,2 @@
-while(1):
-    print("fsdf")
+a = input()
+print(a[::-1])

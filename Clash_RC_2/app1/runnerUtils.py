@@ -75,6 +75,8 @@ def runCode(que_num, code, language,btn_click_status,user_test):             #bt
             # TC_Status["Output"]=err
             TC_Status["ShortFormOfStatus"].append(list(ErrorCodes.keys())[1])
             # TC_Status.append("WA")
+        clearAll()
+        
     print("see list of status ",TC_Status)
     return TC_Status
 
