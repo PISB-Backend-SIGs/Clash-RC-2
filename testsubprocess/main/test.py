@@ -74,18 +74,21 @@
 # dict={"d":2}
 # print(dict["s"])
 # s="dfsdfs"
-i = input()
-print(i)
+# i = input()
+# print(i)
 # displaying the memory
 #  (current, peak),
 
-# while(True):
-#     print("Dd")
+while(1):
+    print("Dd")
 # t=10000000000000000000000000000000000000000000000
 # while(t>0):
 #     print(t)
 #     t -=1
- 
+
+# while(True):
+#     print("ff") 
+
 #type error
 # my_list = [1, 2, 3]
 # result = my_list / 2
@@ -124,7 +127,8 @@ print(i)
 
 
 # import numpy as np
-# from scipy.stats import norm
+# import norm
+# # from scipy.stats import norm
 
 
 # # Generate some random data

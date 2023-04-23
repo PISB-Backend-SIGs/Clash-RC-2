@@ -234,7 +234,6 @@ op_file_path = open(f"{FilePath}/op.txt","w+")
 ####8
 import subprocess
 import signal,resource
-import psutil,re
 
 ceErrors = [ "SyntaxError:","NameError:","TypeError:","ImportError:","IndentationError:","LogicError:"]
 reErrors = ["ZeroDivisionError:","IndexError:","KeyError:","AttributeError:","ValueError:","RuntimeError","StopIteration","RecursionError","OSError"]
@@ -258,7 +257,7 @@ def set_time_limit(time_limit):
 import time
 MemoryLimit = 256 * 1024 * 1024   #on 17 mle
 def set_memory_limit():
-    # resource.setrlimit(resource.RLIMIT_CPU, (timeout_limit, timeout_limit))
+    resource.setrlimit(resource.RLIMIT_CPU, (TimeoutLimit, TimeoutLimit))
     # resource.setrlimit(resource.RLIMIT_AS, (MemoryLimit, MemoryLimit))
     resource.setrlimit(resource.RLIMIT_AS, (MemoryLimit, MemoryLimit))
 # define a function to execute the user's code and detect errors
@@ -272,7 +271,7 @@ def RunByLang():
 
 def execute_user_code(command):
     try:
-        set_time_limit(TimeoutLimit)
+        # set_time_limit(TimeoutLimit)
         process = subprocess.Popen(command,stdin=tc_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit)
         # process = RunByLang()
         # process2 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit)
@@ -284,9 +283,11 @@ def execute_user_code(command):
         # print(process)
         # # wait for the command to finish and get the stdout and stderr
         stdout, stderr = process.communicate()
+        print("\nstdeerr : ",stderr )
         op_file_path.write(stdout.decode().strip())
         # stdout2, stderr2 = process2.communicate()
         # print(stderr2,stdout2)
+        # print(stderr.decode())
         CopyFilesToTxt(stdout,stderr)
         ListOfReturn =stderr.decode().strip().split()
         print(ListOfReturn)
@@ -302,7 +303,8 @@ def execute_user_code(command):
             elif "MemoryError" in ListOfReturn:
                 return "MLE"
             else:
-                return "WA"
+                print(process.returncode)
+                return "TLE"
 
             # print(process.returncode)
             # print(stderr.decode())
@@ -318,7 +320,8 @@ def execute_user_code(command):
             # return "CE"
         else:
             if (process.returncode == 0):
-                return "AC"
+                print("ac")
+                return 
             else:
                 return "WA"
             
@@ -338,6 +341,7 @@ def execute_user_code(command):
 
         # stderr = process.stderr.read()
         ListOfReturn =stderr.decode().strip().split()
+        print(ListOfReturn)
         # s[s.index("File")] = "ddddd"
         # print("index ",ListOfReturn)
         # print("inside 1timeout ",str(stderr.decode()).split())

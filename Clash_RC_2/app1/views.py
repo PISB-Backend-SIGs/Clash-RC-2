@@ -11,7 +11,8 @@ from .utils import *
 from .decorators import *
 from .models import *
 from .decorators import (check_time, only_superuser)
-from .runner_utils import runCode
+from .runnerUtils import runCode
+import json
 
 @login_required(login_url='login')
 def home(request):
@@ -119,20 +120,26 @@ def question(request,id):
     context["question"]=question
     context["player"]=player
     context["team"]=team
+    context["isSolved"]=False
 
     try:
         submission = Submission.objects.filter(player=user,q_id=question,q_status="AC").last()
         # print("subtry",submission[0].s_code)
         # print("subtry",submission)
         # print("subtry",submission[0].s_code)
-        context["user_code"]=submission.s_code
+        context["isSolved"]=True
+
+        context["user_code"]=json.dumps(submission.s_code)
 
     except:
         try:
             submission = Submission.objects.filter(player=user,q_id=question).last()
-            context["user_code"]=submission.s_code
+            # print(submission)
+            context["isSolved"]=True
+            context["user_code"]=json.dumps(submission.s_code)
         except:
-            context["user_code"]=""
+            context["isSolved"]=False
+            context["user_code"]=json.dumps("#Write your code here..")
     try:
         if submission.s_language == "cpp":
             context["code_lang_cpp"]="cpp"
@@ -140,7 +147,9 @@ def question(request,id):
             context["code_lang_c"]="c"
     except:
         pass
-    return render(request,"app1/question.html",context)
+    print("user code  : ",context["user_code"])
+    # return render(request,"app1/question.html",context)
+    return render(request,"app1/codingPage.html",context)
 
 @login_required(login_url='login')
 def question_sub(request,id):
@@ -160,26 +169,29 @@ def question_sub(request,id):
         if (btn_status==0):
             print("run clciked")
             user_test_ip = request.POST.get("testip")
-            status = list(runCode(id,user_code,language,btn_status,user_test_ip))
-            print("from utils to show op",status)
+            status = runCode(id,user_code,language,btn_status,user_test_ip)
+            # print("from utils to show op",status)
+            print("from utils to show op")
             dict = {
                 "status":1,
-                "tc_count":status,
+                "subStatus":status,
                 "testip":user_test_ip,
-                "testop":status[0],
+                # "testop":status[0],
             }
             return JsonResponse(dict)
 
         submission = Submission(team=team,player=user,q_id=question,s_code=user_code,s_language=language)
         
-
+        submissionFlag = False
         #it will store one submission of user with answer of all testcases
         status = runCode(id,user_code,language,btn_status,"No")
-        if (status.count("AC")==len(status)):
+        if (status["ShortFormOfStatus"].count("AC")==len(status["ShortFormOfStatus"])):
             try:
                 if(Submission.objects.filter(team=team,q_id=id,q_status="AC")):
+                    submissionFlag = True
                     submission.q_status = "AC"
             except:
+                submissionFlag = True
                 submission.q_status = "AC"
                 marks_reduce = calc_score(Submission.objects.filter(team=team,q_id=id))  #It gives how many marks will be reducing
                 team.team_score += (question.q_point - marks_reduce)    #It will store marks for that question in team 
@@ -190,9 +202,15 @@ def question_sub(request,id):
         else:
             submission.q_status = "WA"
         submission.save()
-
+        dict = {
+                "status":1,
+                "subStatus":status,
+                # "testip":user_test_ip,
+                # "testop":status[0],
+                "submissionFlag":submissionFlag,
+            }
         # return redirect(f"/question/{id}")
-        return JsonResponse({"status":1,"tc_count":status})
+        return JsonResponse(dict)
 
 # @login_required(login_url='login')
 def leaderboard(request):
@@ -226,9 +244,9 @@ def settingwale(request):
 
 
 def test(request):
-    if (request.method == "POST"):
-        return JsonResponse({"status":1})
-    else:
-        return JsonResponse({"status":0})
+    # if (request.method == "POST"):
+    #     return JsonResponse({"status":1})
+    # else:
+    #     return JsonResponse({"status":0})
     # make_dir("prasad")
-    return render(request,"app1\\test.html")
+    return render(request,"app1/codingPage.html")

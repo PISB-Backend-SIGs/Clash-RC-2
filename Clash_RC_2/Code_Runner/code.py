@@ -1,6 +1,4 @@
-# def reverse_string(string):
-#     print( string[::-1])
+def reverse_string(string):
+    print( string[::-1])
 
-# reverse_string(input())
-
-print("dddd")
+reverse_string(input())

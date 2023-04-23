@@ -1,96 +1,143 @@
-"""currently we are not using this insted of this we are using codeRun.py"""
+import os
+import subprocess
+import signal,resource
 
-import subprocess,os
-import time
-codeRunnerPath = os.path.abspath("Code_Runner")
-print(codeRunnerPath,"dddddddddddddddddddddkkkkkkkkkkkkkkkkkkkkkkkk")
-def run_python():
-    code_path = f"{codeRunnerPath}/code.py"
-    tc_path = f"{codeRunnerPath}/input.txt"
-    # x = open(tc_path,"r")
-    # y = open(code_path,"r")
-    # print(x.read(),y.read())
-    er=open(f'{codeRunnerPath}/error.txt','w+')
-    rc=open(f'{codeRunnerPath}/status.txt','w+')
-    out=open(f'{codeRunnerPath}/output.txt','w+')
-    # run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True,timeout=1)
-    st =time.time()
+
+codeRunnerPath = os.path.abspath("testsubprocess")
+# codeRunnerPath="Clash_RC_2/Code_Runner"
+
+#It will give current file path 
+#And our other files are in same folder
+FilePath = os.path.dirname(__file__)
+print("File Path ",FilePath)
+
+#File in which users code is present
+PythonFile = f"{FilePath}/code.py"
+CppFile = f"{FilePath}/code.cpp"
+CFile = f"{FilePath}/code.c"
+#File in which ip testcase is present
+ip_file_path = f"{FilePath}/input.txt"
+with open(ip_file_path, 'r') as f:
+    ip_contents = f.read()
+
+
+ErrorCodes={
+  "AC": 0, 
+  "WA": 1, 
+  "MLE":2, 
+  "TLE":3, 
+  "CE": 4, 
+  "RE": 5, 
+}
+
+ceErrors = [ "SyntaxError:","NameError:","TypeError:","ImportError:","IndentationError:","LogicError:"]
+reErrors = ["ZeroDivisionError:","IndexError:","KeyError:","AttributeError:","ValueError:","RuntimeError","StopIteration","RecursionError","OSError"]
+#"MemoryError"
+
+#Timeout Signal
+TimeoutLimit = 1
+def set_time_limit(time_limit):
+    def signal_handler(signum, frame):
+        raise TimeoutError
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(TimeoutLimit)
+
+MemoryLimit = 256 * 1024 * 1024   
+def set_memory_limit():
+    # resource.setrlimit(resource.RLIMIT_CPU, (TimeoutLimit, TimeoutLimit))
+    resource.setrlimit(resource.RLIMIT_AS, (MemoryLimit, MemoryLimit))
+
+def execute_user_code(lang):
     try:
-        run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True,timeout=1)
-    except subprocess.TimeoutExpired:
-        print("enter in exept blockhhhhhhhhhhhhhhhhhhhkkhk")
-    et = time.time()
-    print("time foe execution  : ",et-st)
+        set_time_limit(TimeoutLimit)
+
+        process = RunByLang(lang)
+            
+        # # wait for the command to finish and get the stdout and stderr
+        stdout, stderr = process.communicate()
+        ListOfReturn =stderr.decode().strip().split()
+        print(ListOfReturn)
+        # signal.alarm(0)
+
+        # check for any errors in stderr
+        if process.returncode != 0:
+            process.kill()
+            if any(error in ListOfReturn for error in ceErrors):
+                CopyReturnCode(stderr,ErrorCodes["CE"])
+                print("CE")
+                # return "CE"
+            elif any(error in ListOfReturn for error in reErrors):
+                CopyReturnCode(stderr,ErrorCodes["RE"])
+                print("RE")
+                # return "RE"
+            elif "MemoryError" in ListOfReturn:
+                CopyReturnCode(stderr,ErrorCodes["MLE"])
+                print("MLE")
+                # return "MLE"
+            else:
+                CopyReturnCode(stderr,ErrorCodes["WA"])
+                print("WA")
+                # return "WA"
+        else:
+            if (process.returncode == 0):
+                CopyOpFile(stdout,ErrorCodes["AC"])
+                print("AC")
+                # return "AC"
+            else:
+                CopyReturnCode(stderr,ErrorCodes["WA"])
+                print("WA")
+                # return "WA"    
+    except TimeoutError:
+        # handle timeout error
+        process.kill()
+        stdout, stderr = process.communicate()
+        CopyOpFile(stdout,stderr)
+
+        # stderr = process.stderr.read()
+        ListOfReturn =stderr.decode().strip().split()
+        # s[s.index("File")] = "ddddd"
+        # print("index ",ListOfReturn)
+        # print("inside 1timeout ",str(stderr.decode()).split())
+        if ("MemoryError" in ListOfReturn):
+            CopyReturnCode(stderr,ErrorCodes["MLE"])
+            print("MLE")
+            # return "MLE"
+        else:
+            CopyReturnCode(stderr,ErrorCodes["TLE"])
+            print("TLE")
+            # return "TLE"
+
+def CopyReturnCode(stderr,rCode):
+    err=open(f'{FilePath}/error.txt','w+')
+    rcode=open(f'{FilePath}/returncode.txt','w+')
+    err.write(stderr.decode().strip())
+    rcode.write(rCode)
+
+def CopyOpFile(stdout,rCode):
+    out=open(f'{FilePath}/output.txt','w+')
+    rcode=open(f'{FilePath}/returncode.txt','w+')
+
+    out.write(stdout.decode().strip())
+    rcode.write(rCode)
+    # rCode.write(rCode)
+
+def RunByLang(lang):
+    if (lang == "py"):
+        process = subprocess.Popen(['python3', f'{PythonFile}'],stdin=ip_contents,stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit)
+        return process
+    elif (lang == "cpp"):
+        process = subprocess.Popen(['g++', '-o', f"{FilePath}/code", f"{CppFile}"],stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit )
+        if (process.returncode != 0):
+            return process
+        process = subprocess.Popen([f"{FilePath}/./code"],stdin=ip_contents,stdout=subprocess.PIPE, stderr=subprocess.PIPE,preexec_fn=set_memory_limit )
+        return process
     
-    # print(run)
-    # print(run.stdout)
-    # print(run.stderr)
-    # print(run.returncode)
-    
-    out.write(run.stdout)
-    er.write(run.stderr)
-    rc.write(str(run.returncode))
-    er.close()
-    rc.close()
-    out.close()
-
-def run_cpp():
-    code_path = f"{codeRunnerPath}/code.cpp"
-    tc_path = f"{codeRunnerPath}/input.txt"
-    # x = open(tc_path,"r")
-    # y = open(code_path,"r")
-    # print(x.read(),y.read())
-    er=open(f'{codeRunnerPath}/error.txt','w+')
-    rc=open(f'{codeRunnerPath}/status.txt','w+')
-    out=open(f'{codeRunnerPath}/output.txt','w+')
-    # run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True)
-    run = subprocess.run(['g++', '-o', f"{codeRunnerPath}/code", f"{code_path}"], capture_output=True, text=True)
-    # print(run)
-    if run.returncode != 0:
-        rc.write(str(run.returncode))
-        rc.close()
-        er.write(run.stderr)
-        er.close()
-        print('Compilation failed. Errors written to errors.txt.')
-    else:
-        with open(f"{tc_path}", "r") as input_file:
-            program_result = subprocess.run([f"{codeRunnerPath}/./code"],stdin=input_file, capture_output=True, text=True)
-            out.write(program_result.stdout)
-            er.write(program_result.stderr)
-            rc.write(str(run.returncode))
-            rc.close()
-            er.close()
-            out.close()
+# test the function with a sample command
 
 
 
-def run_c():
-    code_path = f"{codeRunnerPath}/code.c"
-    tc_path = f"{codeRunnerPath}/input.txt"
-    # x = open(tc_path,"r")
-    # y = open(code_path,"r")
-    # print(x.read(),y.read())
-    er=open(f'{codeRunnerPath}/error.txt','w+')
-    rc=open(f'{codeRunnerPath}/status.txt','w+')
-    out=open(f'{codeRunnerPath}/output.txt','w+')
-    # run = subprocess.run(f"python {code_path} <{tc_path}", text=True, shell=True, capture_output=True)
-    run = subprocess.run(['gcc', '-o', f"{codeRunnerPath}/code", f"{code_path}"], capture_output=True, text=True)
-    # print(run)
-    if run.returncode != 0:
-        rc.write(str(run.returncode))
-        rc.close()
-        er.write(run.stderr)
-        er.close()
-        print('Compilation failed. Errors written to errors.txt.')
-    else:
-        with open(f"{tc_path}", "r") as input_file:
-            program_result = subprocess.run([f"{codeRunnerPath}/./code "],stdin=input_file, capture_output=True, text=True)
-            out.write(program_result.stdout)
-            er.write(program_result.stderr)
-            rc.write(str(run.returncode))
-            rc.close()
-            er.close()
-            out.close()
+
+
 
 
 
