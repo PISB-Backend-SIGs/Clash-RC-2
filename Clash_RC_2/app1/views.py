@@ -116,16 +116,17 @@ def question(request,id):
     user = User.objects.get(username=request.user)
     player = Player.objects.get(user=user)
     team = Team.objects.get(user__username=request.user)
-    print("team ",team)
+    print("this is user : ",user,"with team id : ",team)
+    # print("team ",team)
     context["question"]=question
     context["player"]=player
     context["team"]=team
     context["isSolved"]=False
 
     try:
-        submission = Submission.objects.filter(player=user,q_id=question,q_status="AC").last()
+        submission = Submission.objects.filter(team=team,q_id=question,q_status="AC").last()
         # print("subtry",submission[0].s_code)
-        # print("subtry",submission)
+        print("last accepted submission ",submission)
         # print("subtry",submission[0].s_code)
         context["isSolved"]=True
 
@@ -190,6 +191,8 @@ def question_sub(request,id):
                 if(Submission.objects.filter(team=team,q_id=id,q_status="AC")):
                     submissionFlag = True
                     submission.q_status = "AC"
+                    
+
             except:
                 submissionFlag = True
                 submission.q_status = "AC"
@@ -198,10 +201,13 @@ def question_sub(request,id):
                 submission.s_pt = team.team_score
                 question.q_point -=1
                 question.save()
-                team.save()
+                
+
         else:
             submission.q_status = "WA"
+        team.team_attempted +=1
         submission.save()
+        team.save()
         dict = {
                 "status":1,
                 "subStatus":status,
