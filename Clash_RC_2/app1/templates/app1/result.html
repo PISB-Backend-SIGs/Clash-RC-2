@@ -1,0 +1,33 @@
+{% extends 'app1/base.html' %}
+{% block "title" %}{{title}}{% endblock "title" %}
+{% block "codeblock" %}
+
+
+<div class="container">
+    <h2>Leaderboard</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>Users</th>
+          <th>Score</th>
+          <th>Attempted</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for team in teams %}
+            <tr>
+                <td>{{team.place}}</td>
+                <td>{{team.user1}} {% if "user2" in team %}and {{team.user2}}{% endif %}
+                </td>
+                <td>{{team.score}} </td>
+                <td>{{team.attempted_question}} </td>
+
+            </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+{% endblock "codeblock" %}

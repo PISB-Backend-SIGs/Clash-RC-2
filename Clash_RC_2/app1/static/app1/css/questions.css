@@ -1,0 +1,14 @@
+
+.obox{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: antiquewhite;
+}
+.odiv{
+    padding: 1rem;
+    border: 2px solid black;
+    height: fit-content;
+    margin: 1rem;
+}

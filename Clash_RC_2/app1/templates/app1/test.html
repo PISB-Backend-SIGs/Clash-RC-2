@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static  %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'app1/css/test.css' %}">
+</head>
+<body>
+    <h1>test</h1>
+    <div id="parent"></div>
+<script>
+    // create a new div element
+var divA = document.createElement('div');
+
+// add some child elements to the div
+var heading = document.createElement('h1');
+heading.textContent = 'Hello, world!';
+divA.appendChild(heading);
+
+var paragraph = document.createElement('p');
+paragraph.textContent = 'This is some text.';
+divA.appendChild(paragraph);
+
+// append the div to the parent element
+var parent = document.getElementById('parent');
+parent.appendChild(divA);
+
+</script>
+</body>
+</html>

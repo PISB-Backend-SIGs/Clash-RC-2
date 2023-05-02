@@ -1,0 +1,68 @@
+{% extends 'app1/base.html' %}
+{% block "codeblock" %}
+
+<h1>{{player.username}}</h1>
+
+<div class="navbar-brand navvi timer" href="#" style="margin-left: 20px;">
+  <div class="timer_container">
+      <div class=" w-100 d-flex p-0 flex-grow-1" id="countdown">
+          <span id="minutes" class="timeritems"></span> :
+          <span id="seconds" class="timeritems"></span>
+      </div>
+    </div>                     
+</div>
+
+<div>
+  <h1>score : {{team_score}}</h1>
+</div>
+
+<div class="container d-flex flex-wrap justify-content-between">
+{% for question in questions %}
+    
+    <div class="card text-center m-5" style="width: 18rem;">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{question.q_aqrcy}}%" aria-valuenow="{{question.q_aqrcy}}" aria-valuemin="0" aria-valuemax="100">{{question.q_aqrcy}}%</div>
+          </div>
+        <div class="card-body">
+          {% comment %} <h6>{% if question.q_id|stringformat:"s" in ques_list %}Solved{% endif %} </h6> {% endcomment %}
+          <h5 class="card-title">{{question.q_title}}</h5>
+          <h5 class="card-title">Points : {{question.q_point}}</h5>
+          <p class="card-text">Difficulty &nbsp;{{question.q_diff_level}}</p>
+          <input class="btn {% if question.q_id|stringformat:"s" in ques_list %}btn-success {% else %}btn-danger{% endif %}" type="button" value="Solve" onclick="location.href='/question/{{question.q_id}}'">
+        </div>
+      </div>
+{% endfor %}
+</div>
+
+<script>
+  x = setInterval(function() {    
+      
+      const countDown = new Date('{{end_time}}').getTime();
+          const now = new Date().getTime();
+          ms = countDown - now;
+          let seconds = Math.floor((ms / 1000) % 60);
+          let minutes = Math.floor((ms / (1000 * 60)) % 60);
+          document.getElementById("minutes").innerText = minutes;
+          if (seconds<10 ){
+              document.getElementById("seconds").innerText =  "0"+seconds ;
+          }else{
+              document.getElementById("seconds").innerText = seconds ;
+          }
+        if (ms < 0) {
+          const radioInputs = document.querySelectorAll('input[type="radio"]');
+          radioInputs.forEach((input) => {
+          input.required = false;
+          
+          });
+          document.getElementById("minutes").innerText = 0;
+          document.getElementById("seconds").innerText = 0;
+          // var sub_btn = document.getElementById("submit_btn");
+          // sub_btn.name = "nsubmit";
+          // sub_btn.click();
+          location.href = "{% url 'leaderboard' %}"
+          clearInterval(x);
+        }
+      },0)
+  </script>
+
+{% endblock "codeblock" %}

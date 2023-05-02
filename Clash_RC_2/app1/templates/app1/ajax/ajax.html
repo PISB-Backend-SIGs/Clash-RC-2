@@ -1,0 +1,258 @@
+<script>
+    $("#submit_cod").on("click",()=>{
+        console.log("submit clicked");
+        enableAllBtns();
+        // var statusDiv = document.getElementById("Status");
+
+        // var heading = document.createElement('h1');
+        // var headingDiv = document.createElement('div');
+        // heading.textContent = 'Answer is Correct /Failed.';
+        // headingDiv.setAttribute("class","overallStatus");
+        // headingDiv.appendChild(heading);
+        // statusDiv.appendChild(headingDiv);
+
+        // var testcasesDiv = document.createElement('div');
+        // testcasesDiv.setAttribute("class","alltext d-flex flex-wrap");
+
+        // var individualTestcaseDiv = document.createElement("div");
+        // individualTestcaseDiv.setAttribute('class', 'test d-flex mx-3');
+        // var individualTestcaseDiv1 = document.createElement("div");
+        // individualTestcaseDiv1.setAttribute('class', 'test d-flex mx-3');
+
+        // // create a new ion-icon element
+        // var ionIcon = document.createElement('ion-icon');
+        // ionIcon.setAttribute('name', 'close-circle-outline');
+        // ionIcon.setAttribute('class', 'mx-3 my-1');
+        // ionIcon.setAttribute('size', 'large');
+        // var ionIcon1 = document.createElement('ion-icon');
+        // ionIcon1.setAttribute('name', 'checkmark-circle-outline');
+        // ionIcon1.setAttribute('class', 'mx-3 my-1 ');
+        // ionIcon1.setAttribute('size', 'large');
+
+        // // create a new text node
+        // var textNode = document.createTextNode('Test Case 1');
+        // var textNode1 = document.createTextNode('Test Case 2');
+
+        // // add the text node and ion-icon as children of the div element
+        // individualTestcaseDiv.appendChild(textNode);
+        // individualTestcaseDiv.appendChild(ionIcon);
+        // individualTestcaseDiv1.appendChild(textNode1);
+        // individualTestcaseDiv1.appendChild(ionIcon1);
+
+        // // append the div to the parent element
+        // testcasesDiv.appendChild(individualTestcaseDiv);
+        // testcasesDiv.appendChild(individualTestcaseDiv1);
+        // statusDiv.appendChild(testcasesDiv);
+        createStatusOfSubmission(["AC","WA","WA","AC"]);
+    });
+
+    function createStatusOfSubmission(arr,flag) {
+        //parent status div
+        var statusDiv = document.getElementById("Status");
+
+        //1st child of div
+        var heading = document.createElement('h1');
+        var headingDiv = document.createElement('div');
+        if (flag){
+            headingDiv.setAttribute("class","overallStatus");
+            heading.textContent = 'Submission Passed';
+        }else{
+            headingDiv.setAttribute("class",'overallStatus overallStatusTextColor');
+            heading.textContent = 'Submission Failed';
+
+        }
+        
+        headingDiv.appendChild(heading);
+        statusDiv.appendChild(headingDiv);
+
+        //2nd child of div
+        var testcasesDiv = document.createElement('div');
+        testcasesDiv.setAttribute("class","alltext d-flex flex-wrap");
+
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] !== "AC"){
+                var individualTestcaseDiv = document.createElement("div");
+                individualTestcaseDiv.setAttribute('class', 'test d-flex mx-3');
+                
+                var ionIcon = document.createElement('ion-icon');
+                ionIcon.setAttribute('name', 'close-circle-outline');
+                ionIcon.setAttribute('class', 'mx-3 my-1');
+                ionIcon.setAttribute('size', 'large');
+                
+                var textNode = document.createTextNode('Test Case '+i+" "+arr[i]);
+                
+                individualTestcaseDiv.appendChild(textNode);
+                individualTestcaseDiv.appendChild(ionIcon);
+
+                testcasesDiv.appendChild(individualTestcaseDiv);
+                statusDiv.appendChild(testcasesDiv);
+
+            }else{
+                var individualTestcaseDiv = document.createElement("div");
+                individualTestcaseDiv.setAttribute('class', 'test d-flex mx-3');
+                
+                var ionIcon = document.createElement('ion-icon');
+                ionIcon.setAttribute('name', 'checkmark-circle-outline');
+                ionIcon.setAttribute('class', 'mx-3 my-1');
+                ionIcon.setAttribute('size', 'large');
+                
+                var textNode = document.createTextNode('Test Case '+i+" "+arr[i]);
+                
+                individualTestcaseDiv.appendChild(textNode);
+                individualTestcaseDiv.appendChild(ionIcon);
+
+                testcasesDiv.appendChild(individualTestcaseDiv);
+                statusDiv.appendChild(testcasesDiv);
+            }
+            
+        }
+    }
+
+    $("#submit_code").on( "click" ,function () {
+        //to open console
+        document.getElementById("console-btn").click();
+        //to disable all btns
+        disableAllBtns();
+        (this).disabled = true;
+        // console.log("Submit Clicked")
+        //to clear all nodes
+        var statusDiv = document.getElementById("Status");
+        statusDiv.innerHTML="";
+        // console.log("{{request.user}}","{{question.q_id}}")
+        // let user_code = $("#user_code").val();
+        let user_code = editor.getValue();
+        // console.log(user_code)
+
+        let code_lang = $("#langbtn").val();
+        // console.log(code_lang)
+
+        let id ="{{question.q_id}}"
+        
+        $.ajax({
+            url : '/question_sub/'+id,
+            method : "POST",
+            headers: {
+                'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            data: {
+                "user_code":user_code,
+                "code_lang":code_lang,
+                "btn_clicked":1
+            },
+            success: function(response) {
+                $("#submit_code").prop("disabled",false);
+                console.log(response)
+                // console.log(response.subStatus.ShortFormOfStatus[0])
+
+                createStatusOfSubmission(response.subStatus.ShortFormOfStatus,response.submissionFlag)
+                enableAllBtns();
+                
+                
+            },
+            error: function(xhr, status, error) {
+                // handle error response
+            }
+        })
+
+        
+    })
+
+    $("#run_cod").on("click",()=>{
+        console.log("run clicked");
+        let testop = document.getElementById("testop");
+        console.log(testop.value)
+        testop.value= "response.subStat";
+        disableAllBtns();
+        
+    });
+    // activaet onclick run
+    $("#run_code").on( "click" ,function () {
+        disableAllBtns();
+        //t clear console ie child
+        var statusDiv = document.getElementById("Status");
+        statusDiv.innerHTML="";
+        (this).disabled = true;
+        // console.log("Submit Clicked")
+        // console.log("{{request.user}}","{{question.q_id}}")
+        //let user_code = $("#user_code").val();
+        let user_code = editor.getValue();
+        // console.log(user_code)
+
+        let code_lang = $("#langbtn").val();
+        // console.log(code_lang)
+        
+        let testip = $("#testip").val();
+        // console.log(testip)
+
+        let id ="{{question.q_id}}"
+        // console.log(id)
+        $.ajax({
+            url : '/question_sub/'+id,
+            method : "POST",
+            headers: {
+                'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            data: {
+                "user_code":user_code,
+                "code_lang":code_lang,
+                "testip":testip,
+                "btn_clicked":0
+            },
+            success: function(response) {
+                $("#run_code").prop("disabled",false);
+                (this).disabled = false;
+                console.log(response)
+                // let tc_div = document.getElementById("tc_div");
+                // tc_div.style.display= "none";
+                
+                let testip = document.getElementById("testip");
+                let testop = document.getElementById("testop");
+                testip.value= response.testip
+
+                if (response.subStatus["ShortFormOfStatus"] !=="AC"){
+                    if(response.subStatus["Error"]==="TLE"){
+                        testop.value= response.subStatus["ShortFormOfStatus"]
+                        console.log("if block run")
+                        console.log("ente in if")
+                    }else{
+
+                        testop.value= response.subStatus["Error"]
+                    }
+                    
+                }else{
+                    console.log("ente in else")
+                    testop.value= response.subStatus["Output"]
+                };
+                enableAllBtns();
+                
+            },
+            error: function(xhr, status, error) {
+                // handle error response
+            }
+        })
+
+        
+    })
+   
+    //disable all btns on submission
+    function disableAllBtns() {
+        let submitBtn = document.getElementById("submit_code");
+        let runBtn = document.getElementById("run_code");
+        submitBtn.disabled = true;
+        runBtn.disabled = true;
+        submitBtn.style.backgroundColor = "red";
+        runBtn.style.backgroundColor = "red";
+
+    }
+    //enable all btns after btn clicke run or submit
+    function enableAllBtns() {
+        let submitBtn = document.getElementById("submit_code");
+        let runBtn = document.getElementById("run_code");
+        submitBtn.disabled = false;
+        runBtn.disabled = false;
+        submitBtn.style.backgroundColor = "";
+        runBtn.style.backgroundColor = "";
+
+    }
+
+</script>
