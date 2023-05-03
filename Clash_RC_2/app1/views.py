@@ -63,7 +63,7 @@ def userLogin(request):
         else:
             messages.error(request, "Login Failed due to invalid credentials!")
             return redirect("login")
-    return render(request, 'app1/login.html')
+    return render(request, 'app1/loginPage.html')
 
 def userLogout(request):
     logout(request)
@@ -106,7 +106,7 @@ def questions(request):
     ques_list=check_solved(team)   #To show user which questions are solved
     end_time = Contest_time.objects.get(id=1)
     var = str(end_time.end_time.astimezone())
-    return render(request,"app1/questions.html",{"questions":questions,"player":user,"ques_list":ques_list, "end_time":var,"team_score":team.team_score})
+    return render(request,"app1/QuestionHub.html",{"questions":questions,"player":user,"ques_list":ques_list, "end_time":var,"team_score":team.team_score})
 
 @login_required(login_url='login')
 def question(request,id):

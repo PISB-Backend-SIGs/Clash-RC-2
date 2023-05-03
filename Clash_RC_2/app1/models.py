@@ -60,7 +60,7 @@ class Player(models.Model):
     p_is_loged_in = models.BooleanField(default=False)
     p_start_time = models.DateTimeField(null=True,blank=True)
     p_is_junior = models.BooleanField(default=True)
-   
+    
     def __str__(self):
         return f"{self.user}"
     
