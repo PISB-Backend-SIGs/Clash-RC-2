@@ -70,3 +70,27 @@ def calc_score(submissions):
     numberOfRightSubmission = len(submissions.filter(q_status="AC"))
     marks_reduce = numberOfWrongSubmission*10
     return marks_reduce
+
+
+
+def getQuestionSet(questionQuerySet,teamObject):
+    questionList = []
+    for i in questionQuerySet:
+        questionDict = {}
+        questionDict["id"] = i.questionNumber
+        questionDict["questionTitle"] = i.q_title
+        questionDict["questionAccuracy"] = i.q_aqrcy
+        questionDict["questionSubmissions"] = i.q_subns
+        try:
+            if(Submission.objects.filter(team=teamObject,q_id=i.q_id,q_status="AC")):
+                print("submission Done")
+                questionDict["playerIsAttempted"]=True
+            else:
+                questionDict["playerIsAttempted"]=False
+        except:
+            questionDict["playerIsAttempted"]=False
+            
+        questionList.append(questionDict)
+    # questionDict = dict(questionDict)
+    # print(type(questionDict))
+    return questionList

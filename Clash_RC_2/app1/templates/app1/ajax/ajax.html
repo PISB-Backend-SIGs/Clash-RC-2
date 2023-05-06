@@ -143,7 +143,7 @@
                 $("#submit_code").prop("disabled",false);
                 console.log(response)
                 // console.log(response.subStatus.ShortFormOfStatus[0])
-
+                console.log("enter in submitted ajax")
                 createStatusOfSubmission(response.subStatus.ShortFormOfStatus,response.submissionFlag)
                 enableAllBtns();
                 
@@ -167,6 +167,12 @@
     });
     // activaet onclick run
     $("#run_code").on( "click" ,function () {
+        var select = document.getElementById('langbtn');
+        if (!select.value) {
+            // Display an error message and prevent the form from being submitted
+            alert('Please select a language!');
+            return ;
+          }
         disableAllBtns();
         //t clear console ie child
         var statusDiv = document.getElementById("Status");
@@ -210,7 +216,8 @@
                 testip.value= response.testip
 
                 if (response.subStatus["ShortFormOfStatus"] !=="AC"){
-                    if(response.subStatus["Error"]==="TLE"){
+                    console.log("enter in if block")
+                    if(response.subStatus["Error"]===""){
                         testop.value= response.subStatus["ShortFormOfStatus"]
                         console.log("if block run")
                         console.log("ente in if")

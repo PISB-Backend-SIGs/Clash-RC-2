@@ -16,7 +16,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
 </head>
-<body class="mainBody">
+<body class="mainBody" userDetails= {"user":"{{request.user}}","questionNumber":"{{question.questionNumber}}"}>
+{% comment %} <body class="mainBody" userDetails= {"user":"{{request.user}}"}> {% endcomment %}
 
   <!-- Hearder strip code starts -->
 <section class="head-strip">
@@ -72,10 +73,10 @@
     <div class="drop-buttons">
         <div class="lang">
             <select class="form-select langbtn btn-outline-dark " id="langbtn" aria-label="Default select example" style="background-color: rgba(3, 111, 212, 0.696);">
-                {% comment %} <option disabled selected value=""> Choose Language</option> {% endcomment %}
-                <option value="python" selected>Python</option>
-                <option value="cpp" {% if code_lang_cpp %}selected{% endif %}>C++</option>
-                <option value="c" {% if code_lang_c %}selected{% endif %}>C</option>
+                <option disabled selected value="">Choose Language</option>
+                <option value="python" >Python</option>
+                <option value="cpp" >C++</option>
+                <option value="c" >C</option>
               </select>
         </div>
         <div class="choosefile" >
@@ -85,7 +86,7 @@
 
     </div>
     <div class="code-section">
-      <div   class="codehere" id="editor1">
+      <div   class="codehere" id="editor1" >
          
       </div>
 
@@ -161,13 +162,15 @@
 
 
 <script >
+
+  //it will add ac code by default
   // console.log('{{isSolved}} | tojson')
   // console.log(" {{user_code}} | safe ")
   // console.log("SDAD")
-  if ('{{isSolved}}'){
+  {% comment %} if ('{{isSolved}}'){
     console.log("enterd in if")
     editor.session.setValue({{ user_code| safe}}) 
-  }
+  } {% endcomment %}
   
   
 

@@ -100,22 +100,26 @@ def userRegister(request):
 @login_required(login_url='login')
 def questions(request):
     user=User.objects.get(username=request.user)
+    player = Player.objects.get(user=user)
     team = Team.objects.get(user=user)
-    questions = Question.objects.all()
+    questions = getQuestionSet(Question.objects.filter(isForJuniors = player.p_is_junior),team)
+    sorted_list = sorted(questions, key=lambda x: x['id'])
+
+    # questions = Question.objects.all()
     check_accuracy()
     ques_list=check_solved(team)   #To show user which questions are solved
     end_time = Contest_time.objects.get(id=1)
     var = str(end_time.end_time.astimezone())
-    return render(request,"app1/QuestionHub.html",{"questions":questions,"player":user,"ques_list":ques_list, "end_time":var,"team_score":team.team_score})
+    return render(request,"app1/QuestionHub.html",{"questions":sorted_list,"player":user,"ques_list":ques_list, "end_time":var,"team_score":team.team_score})
 
 @login_required(login_url='login')
 def question(request,id):
     context={}
-    question = Question.objects.get(q_id=id)
-    print("question",question)
     user = User.objects.get(username=request.user)
     player = Player.objects.get(user=user)
     team = Team.objects.get(user__username=request.user)
+    question = Question.objects.get(questionNumber=id,isForJuniors=player.p_is_junior)
+    print("question",question)
     print("this is user : ",user,"with team id : ",team)
     # print("team ",team)
     context["question"]=question
@@ -186,26 +190,42 @@ def question_sub(request,id):
         submissionFlag = False
         #it will store one submission of user with answer of all testcases
         status = runCode(id,user_code,language,btn_status,"No")
+        print(status["ShortFormOfStatus"].count("AC"),"len of status",len(status["ShortFormOfStatus"]))
         if (status["ShortFormOfStatus"].count("AC")==len(status["ShortFormOfStatus"])):
             try:
                 if(Submission.objects.filter(team=team,q_id=id,q_status="AC")):
+                    print("to check submission flag try")
                     submissionFlag = True
                     submission.q_status = "AC"
                     
+                else:
+                    print("to check submission flag else")
+                    submissionFlag = True
+                    submission.q_status = "AC"
+                    marks_reduce = calc_score(Submission.objects.filter(team=team,q_id=id))  #It gives how many marks will be reducing
+                    team.team_score += (question.q_point - marks_reduce)    #It will store marks for that question in team 
+                    submission.s_pt = team.team_score
+                    question.q_point -=1
+                    question.save()
+                    
 
             except:
-                submissionFlag = True
-                submission.q_status = "AC"
-                marks_reduce = calc_score(Submission.objects.filter(team=team,q_id=id))  #It gives how many marks will be reducing
-                team.team_score += (question.q_point - marks_reduce)    #It will store marks for that question in team 
-                submission.s_pt = team.team_score
-                question.q_point -=1
-                question.save()
+                pass
+            #     print("to check submission flag exept")
+            #     submissionFlag = True
+            #     submission.q_status = "AC"
+            #     marks_reduce = calc_score(Submission.objects.filter(team=team,q_id=id))  #It gives how many marks will be reducing
+            #     team.team_score += (question.q_point - marks_reduce)    #It will store marks for that question in team 
+            #     submission.s_pt = team.team_score
+            #     question.q_point -=1
+            #     question.save()
                 
 
         else:
             submission.q_status = "WA"
         team.team_attempted +=1
+        question.q_subns +=1
+        question.save()
         submission.save()
         team.save()
         dict = {

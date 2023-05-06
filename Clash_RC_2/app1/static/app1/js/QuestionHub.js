@@ -28,3 +28,16 @@
     `);
 
     tbody.innerHTML = rows.join('');
+
+
+    var myVariable = document.body.getAttribute('data-my-objects');
+    // for (let i = 0; i < myVariable.length; i++) {
+    //     // console.log(i);
+    //     let obj = myVariable[i];
+    //     console.log(obj);
+    //     console.log(obj.q_title);
+    //     // console.log(myVariable[1]);
+    //     // console.log(myVariable[0]["q_title"]);
+    // }
+    // var myVariable = JSON.parse(document.body.getAttribute('data-my-objects'));
+console.log(myVariable)

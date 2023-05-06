@@ -7,6 +7,7 @@ from django.utils import timezone
 # question model
 class Question(models.Model):
     q_id = models.IntegerField(primary_key=True)
+    questionNumber = models.IntegerField(null=True)
     q_title = models.CharField(max_length=40)
     q_descrp =models.TextField()
     # q_descrp =RichTextUploadingField(blank=True,null=False,extra_plugins=['codesnippet'])
@@ -21,6 +22,7 @@ class Question(models.Model):
     q_subns = models.IntegerField(default=0)
     q_time_limit = models.IntegerField(null=True,default=1)
     q_memory_limit = models.IntegerField(null=True,default=50000)
+    isForJuniors = models.BooleanField(default=True)
     def __str__(self):
         return f"{self.q_id}"
 

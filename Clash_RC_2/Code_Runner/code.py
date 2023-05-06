@@ -1,1 +1,4 @@
-#Write your code here..
+#Write the Python code.....
+import os
+
+print(os.listdir())

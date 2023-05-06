@@ -3,7 +3,7 @@ from .models import *
 # Register your models here.
 # admin.site.register(models.Question)
 class QuestionAdmin (admin.ModelAdmin):
-    list_display = ("q_id","q_title")
+    list_display = ("q_id","questionNumber","q_title","isForJuniors")
 admin.site.register(Question,QuestionAdmin)
 
 class PlayerAdmin (admin.ModelAdmin):

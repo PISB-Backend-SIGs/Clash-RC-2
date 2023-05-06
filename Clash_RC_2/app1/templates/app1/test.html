@@ -29,5 +29,63 @@ var parent = document.getElementById('parent');
 parent.appendChild(divA);
 
 </script>
+
+
+
+
+
+
+<script>
+    let data = {
+        1:{
+
+            "ip":"it my code"
+        },
+        2:{
+            "ip":"its my 2nd code"
+        },
+    };
+    localStorage.setItem("user",JSON.stringify(data))
+    let x = JSON.parse(localStorage.getItem("user"));
+    console.log("user  : ",x)
+    if(x[3]){
+        console.log("1 is present")
+    }else{
+        console.log("3 no present ");
+        let ip = [{"py":"pyrd inputssssss"},{"cpp":"3cppd inputssssss"}];
+        x[3]=ip;
+    }
+    console.log("python ",x[3][0].py);
+    console.log(x[3][1]);
+    // let y = JSON.parse(x)
+    // console.log(y)
+    // console.log(y[1]);
+
+    // try {
+        
+    // } catch (error) {
+    //     let x = localStorage.getItem("user");
+    //     console.log("i dont know",x);
+    // };
+    
+    let z = localStorage.getItem("myuser");
+    if (z) {
+        console.log("yes present",z);
+    } else {
+        
+        console.log("no present",z);
+
+    }
+</script>
+
+
+<!-- <div id="testing">
+laksjflkdjflkd
+</div>
+
+<script>
+    let xxx = document.getElementById("testing").innerText;
+    console.log(xxx);
+</script> -->
 </body>
 </html>

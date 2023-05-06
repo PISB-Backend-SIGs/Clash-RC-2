@@ -84,7 +84,7 @@ def compare(output, tc):
     try:
         with open(tc.t_op.path, "r") as correct_output:
             x = correct_output.read().strip()
-            # print("actual : ",x,"user : ",output)
+            print("actual : ",x,"user : ",output)
             return output.strip() == x
     except:
         return False
