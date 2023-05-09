@@ -1,3 +1,1 @@
-#Write the Python code.....
-import subprocess
-subprocess.run("ls -la")
+print("fgdf")
