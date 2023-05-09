@@ -23,7 +23,8 @@ def execute(code, tc, language):
     copy_run_py(language)
     copy_code(code,language)
     copy_input(tc)
-    run = subprocess.run(f"python {codeRunnerPath}/codeRun.py", shell=True)
+    run = subprocess.run("docker exec test_container pyhton3 src/code_run.py" , shell = True)
+    # run = subprocess.run(f"python {codeRunnerPath}/codeRun.py", shell=True)
     # run = subprocess.run(f"python {codeRunnerPath}/code_run.py", shell=True)
     
     return get_output_files()
@@ -145,8 +146,8 @@ def execute_run(code, tc, language):
     copy_run_py(language)
     copy_code(code,language)
     copy_test_input(tc)
-    run = subprocess.run(f"python {codeRunnerPath}/codeRun.py", shell=True)
-
+    # run = subprocess.run(f"python {codeRunnerPath}/codeRun.py", shell=True)
+    run = subprocess.run("docker exec test_container python3 src/code_run.py" , shell = True)
     return get_output_files()
 
 

@@ -13,20 +13,29 @@ def get_leaderboard(team_set,user_set):
     dict=[]
     for team in team_set:
         user_list=user_set.filter(team__id=team.id)
-        inner_dict={}
+        inner_dict=[]
         if len(user_list)>=2:
             # print("one ele")
             # print(user_list[0].username)
-            inner_dict["place"]=place+1
-            inner_dict["user1"]=user_list[0].username
-            inner_dict["user2"]=user_list[1].username
-            inner_dict["score"]=team.team_score
-            inner_dict["attempted_question"]=team.team_attempted
+            # inner_dict["place"]=place+1
+            # inner_dict["user"]=user_list[0].username
+            # inner_dict["user2"]=user_list[1].username
+            # inner_dict["score"]=team.team_score
+            # inner_dict["attempted_question"]=team.team_attempted
+            # inner_dict["Time"]=team.teamTime
+            inner_dict.append(place+1)
+            inner_dict.append(f"{user_list[0].username} and {user_list[1].username}")
+            inner_dict.append(team.team_score)
+            inner_dict.append(team.team_attempted)
+            # inner_dict.append(team.teamTime)
+
         else:
-            inner_dict["place"]=place+1
-            inner_dict["user1"]=user_list[0].username
-            inner_dict["score"]=team.team_score
-            inner_dict["attempted_question"]=team.team_attempted
+            inner_dict.append(place+1)
+            inner_dict.append("{}".format(user_list[0].username))
+            inner_dict.append(team.team_score)
+            inner_dict.append(team.team_attempted)
+            # inner_dict.append(team.teamTime)
+
         place += 1
         dict.append(inner_dict)
     # print(dict)

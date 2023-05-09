@@ -51,7 +51,7 @@
       
 
         <table id="example" class="display" style="width:85%">
-            <thead>
+            {% comment %} <thead>
             <tr>
                 <th>Rank</th>
                 <th>Username</th>
@@ -60,11 +60,12 @@
                 <th>Q3</th>
                 <th>Q4</th>
                 <th>Score</th>
+                <th>Time</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody> {% endcomment %}
               
-            {% for team in teams %}
+            {% comment %} {% for team in teams %}
             <tr>
                 <td>{{team.place}}</td>
                 <td>{{team.user1}} {% if "user2" in team %}and {{team.user2}}{% endif %}</td>
@@ -74,8 +75,9 @@
                 <td>{{team.attempted_question}} </td>
                 <!-- <td>{{team.attempted_question}} </td> -->
                 <td>{{team.score}}</td>
+                <td>{{team.Time|time:"h:i"}}</td>
             </tr>
-        {% endfor %}
+        {% endfor %} {% endcomment %}
         </table>
 
 <!-- Footer goes here -->
@@ -93,10 +95,10 @@
 
 {% comment %} <--For fetching backend data --> {% endcomment %}
       <script>
-        $(document).ready(function() {
+        {% comment %} $(document).ready(function() {
             $('#example').DataTable();
-        });
-        $(document).on('submit', '#search-form', function(e) {
+        }); {% endcomment %}
+        {% comment %} $(document).on('submit', '#search-form', function(e) {
             e.preventDefault();
             $.ajax({
             type: 'GET',
@@ -107,7 +109,23 @@
                 $('#example').DataTable();
             }
             });
-        });
+        }); {% endcomment %}
+
+        var dataSet = "{{teams|safe}}";
+        console.log(dataSet);
+        $(document).ready(function () {
+          $('#example').DataTable({
+              data: dataSet,
+              columns: [
+                  { title: 'Rank' },
+                  { title: 'Username' },
+                  { title: 'Score' },
+                  { title: 'Attempt' },
+                  {% comment %} { title: 'Time|time:"h:r"' } {% endcomment %}
+              ],
+          });
+      });
+              </script>
       </script> 
 </body>
 </html>

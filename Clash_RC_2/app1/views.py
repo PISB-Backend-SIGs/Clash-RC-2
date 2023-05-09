@@ -245,7 +245,7 @@ def leaderboard(request):
     }
     # team1 =Team.objects.all().values()  #to check attributes
     # print(team1)
-    team =Team.objects.all().order_by('-team_score')
+    team =Team.objects.all().order_by('-team_score',"teamTime")
     # print(team)
     user=User.objects.all()
     # print(user.filter(team__id=3)[0].username)
@@ -275,4 +275,4 @@ def test(request):
     # else:
     #     return JsonResponse({"status":0})
     # make_dir("prasad")
-    return render(request,"app1/codingPage.html")
+    return render(request,"app1/SubmissionPage.html")

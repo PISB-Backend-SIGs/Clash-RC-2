@@ -46,6 +46,7 @@ class Team(models.Model):
     user = models.ManyToManyField(User)
     team_score = models.IntegerField(default=0)
     team_attempted = models.IntegerField(default=0)
+    teamTime = models.DateTimeField(default = timezone.now)
 
     def user_names(self):
         return ",".join([str(p) for p in self.user.all()])
